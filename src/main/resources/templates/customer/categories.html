@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories Management - ECommerce Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <!-- Logo -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="text-lg font-semibold text-gray-900">ECommerce Admin</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 p-4 space-y-6">
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
+                <div class="space-y-1">
+                    <a href="../dashboard.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
+                <div class="space-y-1">
+                    <a href="../auth/users.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+                        User Management
+                    </a>
+                    <a href="#" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shield" class="w-4 h-4 mr-3"></i>
+                        Role Management
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Customers</h3>
+                <div class="space-y-1">
+                    <a href="customerP.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="user" class="w-4 h-4 mr-3"></i>
+                        Customer List
+                    </a>
+                    <a href="#" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="map-pin" class="w-4 h-4 mr-3"></i>
+                        Shipping Addresses
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
+                <div class="space-y-1">
+                    <a href="../product/productP.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="package" class="w-4 h-4 mr-3"></i>
+                        Products
+                    </a>
+                    <a href="categories.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-900">
+                        <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
+                        Categories
+                    </a>
+                    <a href="../product/warehouses.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="warehouse" class="w-4 h-4 mr-3"></i>
+                        Warehouses
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
+                <div class="space-y-1">
+                    <a href="../orders/orders.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
+                        Orders
+                    </a>
+                    <a href="#" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="credit-card" class="w-4 h-4 mr-3"></i>
+                        Payments
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Product Categories</h1>
+                    <p class="text-sm text-gray-600 mt-1">Manage and organize your product categories</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-md">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-medium text-gray-700">DJ</span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">DuJohnson</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Categories Management Content -->
+        <main class="flex-1 overflow-auto p-6">
+            <div class="max-w-7xl mx-auto space-y-6">
+                <!-- Categories List Header -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Categories List</h2>
+                        <div class="flex items-center space-x-3">
+                            <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>All Status</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                            <button onclick="openModal('addCategoryModal')" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                Add Category
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Table -->
+                <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products Count</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                            <i data-lucide="monitor" class="w-5 h-5 text-blue-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-900">Electronics</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Computers, phones, and electronic devices</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">342</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Jan 15, 2024</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                                            <i data-lucide="shirt" class="w-5 h-5 text-purple-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-900">Clothing</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Fashion and apparel for all ages</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">189</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Jan 12, 2024</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                                            <i data-lucide="home" class="w-5 h-5 text-green-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-900">Home & Garden</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Furniture, decor, and garden supplies</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">156</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Jan 10, 2024</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                                            <i data-lucide="trophy" class="w-5 h-5 text-orange-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-900">Sports & Fitness</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Exercise equipment and sports gear</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">98</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Jan 08, 2024</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                                            <i data-lucide="book-open" class="w-5 h-5 text-red-600"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-900">Books & Media</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Books, magazines, and digital media</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">0</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Inactive</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Jan 05, 2024</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-600">Showing 1 to 5 of 24 categories</p>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-2 text-sm border border-gray-300 rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            Previous
+                        </button>
+                        <button class="px-3 py-2 text-sm bg-blue-600 text-white rounded-md">1</button>
+                        <button class="px-3 py-2 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">2</button>
+                        <button class="px-3 py-2 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">3</button>
+                        <button class="px-3 py-2 text-sm border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Next
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Add New Category</h3>
+        </div>
+        <div class="p-6">
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>monitor (Electronics)</option>
+                        <option>shirt (Clothing)</option>
+                        <option>home (Home & Garden)</option>
+                        <option>trophy (Sports & Fitness)</option>
+                        <option>book-open (Books & Media)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button onclick="closeModal('addCategoryModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">Add Category</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+        document.getElementById(modalId).classList.add('flex');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+        document.getElementById(modalId).classList.remove('flex');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target.classList.contains('bg-gray-600')) {
+            event.target.classList.add('hidden');
+            event.target.classList.remove('flex');
+        }
+    }
+
+    // Reinitialize icons after any dynamic content changes
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${pageTitle} + ' - ECommerce Admin'">Role Management - ECommerce Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+      <!-- Page Header -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900" th:text="${pageTitle}">Role Management</h1>
+            <p class="mt-1 text-sm text-gray-600" th:text="${pageDescription}">Manage user roles and permissions for system access control</p>
+          </div>
+          <button onclick="openAddRoleModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Add Role</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Role Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <i data-lucide="shield" class="w-6 h-6 text-blue-600"></i>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Total Roles</p>
+              <p class="text-2xl font-bold text-gray-900">8</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center">
+            <div class="p-2 bg-green-100 rounded-lg">
+              <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Active Roles</p>
+              <p class="text-2xl font-bold text-gray-900">6</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center">
+            <div class="p-2 bg-yellow-100 rounded-lg">
+              <i data-lucide="users" class="w-6 h-6 text-yellow-600"></i>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Assigned Users</p>
+              <p class="text-2xl font-bold text-gray-900">156</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center">
+            <div class="p-2 bg-purple-100 rounded-lg">
+              <i data-lucide="key" class="w-6 h-6 text-purple-600"></i>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Permissions</p>
+              <p class="text-2xl font-bold text-gray-900">24</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <div class="relative">
+              <input type="text" placeholder="Search roles..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Permission Level</label>
+            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <option value="">All Levels</option>
+              <option value="admin">Admin</option>
+              <option value="manager">Manager</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roles Table -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">System Roles</h3>
+            <div class="flex items-center space-x-2">
+              <button class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="download" class="w-4 h-4"></i>
+              </button>
+              <button class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <input type="checkbox" class="rounded border-gray-300">
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <input type="checkbox" class="rounded border-gray-300">
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                    <i data-lucide="crown" class="w-4 h-4 text-red-600"></i>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-medium text-gray-900">Super Admin</div>
+                    <div class="text-sm text-gray-500">SUPER_ADMIN</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">Full system access with all permissions</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">All (24)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 1, 2024</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900">
+                    <i data-lucide="edit" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900">
+                    <i data-lucide="key" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <input type="checkbox" class="rounded border-gray-300">
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <i data-lucide="shield" class="w-4 h-4 text-blue-600"></i>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-medium text-gray-900">Admin</div>
+                    <div class="text-sm text-gray-500">ADMIN</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">Administrative access to most system features</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Admin (18)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 1, 2024</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900">
+                    <i data-lucide="edit" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900">
+                    <i data-lucide="key" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <input type="checkbox" class="rounded border-gray-300">
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <i data-lucide="briefcase" class="w-4 h-4 text-green-600"></i>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-medium text-gray-900">Manager</div>
+                    <div class="text-sm text-gray-500">MANAGER</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">Manage products, orders, and customer data</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Manager (12)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 15, 2024</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900">
+                    <i data-lucide="edit" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900">
+                    <i data-lucide="key" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <input type="checkbox" class="rounded border-gray-300">
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                    <i data-lucide="user" class="w-4 h-4 text-purple-600"></i>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-medium text-gray-900">Customer Support</div>
+                    <div class="text-sm text-gray-500">SUPPORT</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">Handle customer inquiries and support tickets</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">25</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Support (8)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Feb 1, 2024</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center space-x-2">
+                  <button class="text-blue-600 hover:text-blue-900">
+                    <i data-lucide="edit" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900">
+                    <i data-lucide="key" class="w-4 h-4"></i>
+                  </button>
+                  <button class="text-red-600 hover:text-red-900">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-200">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-700">
+              Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">8</span> results
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Previous</button>
+              <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md">1</button>
+              <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">2</button>
+              <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Add Role Modal -->
+<div id="addRoleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-lg w-full">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-medium text-gray-900">Add New Role</h3>
+          <button onclick="closeAddRoleModal()" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+      <form class="px-6 py-4 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Role Name</label>
+          <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter role name">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Role Code</label>
+          <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="ROLE_CODE">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Describe the role and its responsibilities"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">Permissions</label>
+          <div class="space-y-2 max-h-48 overflow-y-auto">
+            <div class="flex items-center">
+              <input type="checkbox" id="perm-dashboard" class="rounded border-gray-300">
+              <label for="perm-dashboard" class="ml-2 text-sm text-gray-700">Dashboard Access</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="perm-users" class="rounded border-gray-300">
+              <label for="perm-users" class="ml-2 text-sm text-gray-700">User Management</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="perm-customers" class="rounded border-gray-300">
+              <label for="perm-customers" class="ml-2 text-sm text-gray-700">Customer Management</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="perm-products" class="rounded border-gray-300">
+              <label for="perm-products" class="ml-2 text-sm text-gray-700">Product Management</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="perm-orders" class="rounded border-gray-300">
+              <label for="perm-orders" class="ml-2 text-sm text-gray-700">Order Management</label>
+            </div>
+            <div class="flex items-center">
+              <input type="checkbox" id="perm-reports" class="rounded border-gray-300">
+              <label for="perm-reports" class="ml-2 text-sm text-gray-700">Reports & Analytics</label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </form>
+      <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+        <button onclick="closeAddRoleModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">Cancel</button>
+        <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Create Role</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+  });
+
+  function openAddRoleModal() {
+    document.getElementById('addRoleModal').classList.remove('hidden');
+  }
+
+  function closeAddRoleModal() {
+    document.getElementById('addRoleModal').classList.add('hidden');
+  }
+
+  // Close modal when clicking outside
+  document.getElementById('addRoleModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeAddRoleModal();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeAddRoleModal();
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECommerce Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="min-h-screen p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">ECommerce Admin Dashboard - All Pages</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dashboard -->
+      <a href="dashboard.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="bar-chart-3" class="w-5 h-5 text-blue-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Dashboard</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Main dashboard with metrics, recent orders, and quick actions</p>
+      </a>
+
+      <!-- Users Management -->
+      <a href="auth/users.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="users" class="w-5 h-5 text-purple-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Users Management</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Manage system users, roles, and permissions</p>
+      </a>
+
+      <!-- Customer Management -->
+      <a href="customer/customerP.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="user" class="w-5 h-5 text-green-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Customer Management</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Manage customer profiles, orders, and account information</p>
+      </a>
+
+      <!-- Products Management -->
+      <a href="product/productP.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="package" class="w-5 h-5 text-orange-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Products Management</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Manage product inventory and details</p>
+      </a>
+
+      <!-- Categories Management -->
+      <a href="customer/categories.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="layers" class="w-5 h-5 text-indigo-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Categories Management</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Manage and organize product categories</p>
+      </a>
+
+      <!-- Warehouse Management -->
+      <a href="product/warehouses.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="warehouse" class="w-5 h-5 text-yellow-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Warehouse Management</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Manage inventory storage locations and track distribution</p>
+      </a>
+
+      <!-- Orders Management -->
+      <a href="orders/orders.html" class="block p-6 bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="shopping-cart" class="w-5 h-5 text-red-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Orders Management</h3>
+        </div>
+        <p class="text-gray-600 text-sm">Monitor and manage all customer orders</p>
+      </a>
+    </div>
+
+    <div class="mt-12 p-6 bg-blue-50 rounded-lg">
+      <h2 class="text-xl font-semibold text-blue-900 mb-4">Page List Summary</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h3 class="font-medium text-blue-800 mb-2">Main Pages:</h3>
+          <ul class="space-y-1 text-blue-700">
+            <li>• Dashboard (dashboard.html)</li>
+            <li>• Users Management (users.html)</li>
+            <li>• Customer Management (customers.html)</li>
+            <li>• Products Management (products.html)</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-medium text-blue-800 mb-2">Additional Pages:</h3>
+          <ul class="space-y-1 text-blue-700">
+            <li>• Categories Management (categories.html)</li>
+            <li>• Warehouse Management (warehouses.html)</li>
+            <li>• Orders Management (orders.html)</li>
+            <li>• Index/Navigation (index.html)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>
