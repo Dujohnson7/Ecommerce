@@ -11,7 +11,6 @@
 <div class="flex h-screen">
     <!-- Sidebar -->
     <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
-        <!-- Logo -->
         <div class="p-6 border-b border-gray-200">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -20,13 +19,11 @@
                 <span class="text-lg font-semibold text-gray-900">ECommerce Admin</span>
             </div>
         </div>
-
-        <!-- Navigation -->
         <nav class="flex-1 p-4 space-y-6">
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
                 <div class="space-y-1">
-                    <a th:href="@{/dashboard/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/dashboard/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
                         Dashboard
                     </a>
@@ -35,7 +32,7 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
                 <div class="space-y-1">
-                    <a  th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="users" class="w-4 h-4 mr-3"></i>
                         User Management
                     </a>
@@ -65,11 +62,11 @@
                         <i data-lucide="package" class="w-4 h-4 mr-3"></i>
                         Products
                     </a>
-                    <a th:href="@{/productCategory/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/productCategory/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
                         Categories
                     </a>
-                    <a th:href="@{/warehouse/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/warehouse/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="warehouse" class="w-4 h-4 mr-3"></i>
                         Warehouses
                     </a>
@@ -78,11 +75,11 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
                 <div class="space-y-1">
-                    <a th:href="@{/order/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/order/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
                         Orders
                     </a>
-                    <a th:href="@{/payment/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md  bg-gray-100 text-gray-900">
+                    <a th:href="@{/payment/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-900">
                         <i data-lucide="credit-card" class="w-4 h-4 mr-3"></i>
                         Payments
                     </a>
@@ -97,8 +94,8 @@
         <header class="bg-white border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Customer Management</h1>
-                    <p class="text-sm text-gray-600 mt-1">Manage customer profiles, orders, and account information</p>
+                    <h1 class="text-2xl font-semibold text-gray-900">Payment Management</h1>
+                    <p class="text-sm text-gray-600 mt-1">Monitor and manage all payment transactions and methods</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button class="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-md">
@@ -116,12 +113,20 @@
 
         <!-- Page Content -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            <!-- Messages -->
+            <div th:if="${message}" class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+                <span th:text="${message}"></span>
+            </div>
+            <div th:if="${error}" class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                <span th:text="${error}"></span>
+            </div>
+
             <!-- Page Header -->
             <div class="mb-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900" th:text="${pageTitle}">Payment Management</h1>
-                        <p class="mt-1 text-sm text-gray-600" th:text="${pageDescription}">Monitor and manage all payment transactions and methods</p>
+                        <h1 class="text-2xl font-bold text-gray-900">Payment Management</h1>
+                        <p class="mt-1 text-sm text-gray-600">Monitor and manage all payment transactions and methods</p>
                     </div>
                     <button onclick="openAddPaymentModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
@@ -130,7 +135,7 @@
                 </div>
             </div>
 
-            <!-- Payment Stats -->
+            <!-- Payment Stats (Static for now, can be dynamic if services are added) -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center">
@@ -194,22 +199,16 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">All Status</option>
-                            <option value="completed">Completed</option>
-                            <option value="pending">Pending</option>
-                            <option value="failed">Failed</option>
-                            <option value="refunded">Refunded</option>
+                            <option th:each="status : ${paymentStatusState}" th:value="${status}" th:text="${status}"></option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select name="method" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">All Methods</option>
-                            <option value="credit_card">Credit Card</option>
-                            <option value="paypal">PayPal</option>
-                            <option value="bank_transfer">Bank Transfer</option>
-                            <option value="crypto">Cryptocurrency</option>
+                            <option th:each="method : ${paymentMethodState}" th:value="${method}" th:text="${method}"></option>
                         </select>
                     </div>
                     <div>
@@ -250,7 +249,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-gray-50">
@@ -269,219 +267,76 @@
                         </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
+                        <tr th:each="payment : ${payments}">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <input type="checkbox" class="rounded border-gray-300">
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">TXN-2024-001234</div>
-                                <div class="text-sm text-gray-500">Stripe: ch_3N...</div>
+                                <div class="text-sm font-medium text-gray-900" th:text="${payment.id}"></div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <span class="text-sm font-medium text-blue-600">JD</span>
+                                        <span class="text-sm font-medium text-blue-600" th:text="${#strings.substring(payment.orders.customer.firstName, 0, 1) + #strings.substring(payment.orders.customer.lastName, 0, 1)}"></span>
                                     </div>
                                     <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">John Doe</div>
-                                        <div class="text-sm text-gray-500">john@example.com</div>
+                                        <div class="text-sm font-medium text-gray-900" th:text="${payment.orders.customer.firstName + ' ' + payment.orders.customer.lastName}"></div>
+                                        <div class="text-sm text-gray-500" th:text="${payment.orders.customer.email}"></div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">#ORD-2024-5678</div>
-                                <div class="text-sm text-gray-500">3 items</div>
+                                <div class="text-sm font-medium text-gray-900" th:text="'#ORD-' + ${payment.orders.id}"></div>
+                                <div class="text-sm text-gray-500" th:text="${payment.orders.products.size()} + ' items'"></div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">$156.99</div>
-                                <div class="text-sm text-gray-500">USD</div>
+                                <div class="text-sm font-medium text-gray-900" th:text="'$' + ${#numbers.formatDecimal(payment.amount, 1, 2)}"></div>
+                                <div class="text-sm text-gray-500">RWF</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <i data-lucide="credit-card" class="w-4 h-4 text-gray-400 mr-2"></i>
-                                    <span class="text-sm text-gray-900">Visa ****1234</span>
+                                    <span class="text-sm text-gray-900" th:text="${payment.paymentMethod}"></span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                                      th:classappend="${payment.paymentState == T(rw.ac.auca.ecommmerce.core.util.order.EPaymentState).PAID} ? 'bg-green-100 text-green-800' :
+                                                       ${payment.paymentState == T(rw.ac.auca.ecommmerce.core.util.order.EPaymentState).PENDING} ? 'bg-yellow-100 text-yellow-800' :
+                                                       ${payment.paymentState == T(rw.ac.auca.ecommmerce.core.util.order.EPaymentState).CANCELED} ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'"
+                                      th:text="${payment.paymentState}"></span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dec 15, 2024</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${#temporals.format(payment.createdAt, 'MMM dd, yyyy')}">
+
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center space-x-2">
                                     <button class="text-blue-600 hover:text-blue-900">
                                         <i data-lucide="eye" class="w-4 h-4"></i>
                                     </button>
-                                    <button class="text-green-600 hover:text-green-900">
-                                        <i data-lucide="download" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <input type="checkbox" class="rounded border-gray-300">
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">TXN-2024-001235</div>
-                                <div class="text-sm text-gray-500">PayPal: PAYID-M...</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                                        <span class="text-sm font-medium text-purple-600">JS</span>
-                                    </div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">Jane Smith</div>
-                                        <div class="text-sm text-gray-500">jane@example.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">#ORD-2024-5679</div>
-                                <div class="text-sm text-gray-500">1 item</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">$89.50</div>
-                                <div class="text-sm text-gray-500">USD</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <i data-lucide="smartphone" class="w-4 h-4 text-gray-400 mr-2"></i>
-                                    <span class="text-sm text-gray-900">PayPal</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dec 15, 2024</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex items-center space-x-2">
-                                    <button class="text-blue-600 hover:text-blue-900">
-                                        <i data-lucide="eye" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-green-600 hover:text-green-900">
-                                        <i data-lucide="check" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <i data-lucide="x" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <input type="checkbox" class="rounded border-gray-300">
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">TXN-2024-001236</div>
-                                <div class="text-sm text-gray-500">Bank: ACH-...</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                                        <span class="text-sm font-medium text-green-600">MB</span>
-                                    </div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">Mike Brown</div>
-                                        <div class="text-sm text-gray-500">mike@example.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">#ORD-2024-5680</div>
-                                <div class="text-sm text-gray-500">5 items</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">$299.99</div>
-                                <div class="text-sm text-gray-500">USD</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <i data-lucide="building-2" class="w-4 h-4 text-gray-400 mr-2"></i>
-                                    <span class="text-sm text-gray-900">Bank Transfer</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dec 14, 2024</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex items-center space-x-2">
-                                    <button class="text-blue-600 hover:text-blue-900">
-                                        <i data-lucide="eye" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-green-600 hover:text-green-900">
-                                        <i data-lucide="download" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <input type="checkbox" class="rounded border-gray-300">
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">TXN-2024-001237</div>
-                                <div class="text-sm text-gray-500">Stripe: ch_3N...</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                                        <span class="text-sm font-medium text-red-600">SW</span>
-                                    </div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">Sarah Wilson</div>
-                                        <div class="text-sm text-gray-500">sarah@example.com</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">#ORD-2024-5681</div>
-                                <div class="text-sm text-gray-500">2 items</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">$45.00</div>
-                                <div class="text-sm text-gray-500">USD</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <i data-lucide="credit-card" class="w-4 h-4 text-gray-400 mr-2"></i>
-                                    <span class="text-sm text-gray-900">Mastercard ****5678</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Failed</span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dec 14, 2024</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex items-center space-x-2">
-                                    <button class="text-blue-600 hover:text-blue-900">
-                                        <i data-lucide="eye" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-green-600 hover:text-green-900">
-                                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
-                                    </button>
+                                    <form th:action="@{/payment/update}" method="post">
+                                        <input type="hidden" name="id" th:value="${payment.id}"/>
+                                        <button type="submit" class="text-green-600 hover:text-green-900">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/payment/delete}" method="post">
+                                        <input type="hidden" name="id" th:value="${payment.id}"/>
+                                        <button type="submit" class="text-red-600 hover:text-red-900">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-
                 <!-- Pagination -->
                 <div class="px-6 py-4 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="text-sm text-gray-700">
-                            Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">1,247</span> results
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium" th:text="${payments.size()}"></span> results
                         </div>
                         <div class="flex items-center space-x-2">
                             <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Previous</button>
@@ -509,57 +364,40 @@
                     </button>
                 </div>
             </div>
-            <form class="px-6 py-4 space-y-4">
+            <form th:action="@{/payment/register}" th:object="${payment}" method="post" class="px-6 py-4 space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
-                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="#ORD-2024-XXXX">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Customer</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Customer</option>
-                        <option value="john-doe">John Doe</option>
-                        <option value="jane-smith">Jane Smith</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Order</label>
+                    <select th:field="*{order}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select Order</option>
+                        <option th:each="order : ${orders}" th:value="${order.id}" th:text="'#ORD-' + ${order.id} + ' (' + ${order.customer.firstName} + ' ' + ${order.customer.lastName} + ')'"></option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
                     <div class="relative">
                         <span class="absolute left-3 top-2 text-gray-500">$</span>
-                        <input type="number" step="0.01" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                        <input type="number" step="0.01" th:field="*{amount}" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="credit_card">Credit Card</option>
-                        <option value="paypal">PayPal</option>
-                        <option value="bank_transfer">Bank Transfer</option>
-                        <option value="crypto">Cryptocurrency</option>
-                        <option value="cash">Cash</option>
+                    <select th:field="*{paymentMethod}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select Method</option>
+                        <option th:each="method : ${paymentMethodState}" th:value="${method}" th:text="${method}"></option>
                     </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Transaction ID</label>
-                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="External transaction reference">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="completed">Completed</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
+                    <select th:field="*{paymentStatus}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select Status</option>
+                        <option th:each="status : ${paymentStatusState}" th:value="${status}" th:text="${status}"></option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                    <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Additional payment notes..."></textarea>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button type="button" onclick="closeAddPaymentModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Record Payment</button>
                 </div>
             </form>
-            <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeAddPaymentModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">Cancel</button>
-                <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Record Payment</button>
-            </div>
         </div>
     </div>
 </div>
@@ -577,14 +415,12 @@
         document.getElementById('addPaymentModal').classList.add('hidden');
     }
 
-    // Close modal when clicking outside
     document.getElementById('addPaymentModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeAddPaymentModal();
         }
     });
 
-    // Close modal with Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeAddPaymentModal();
