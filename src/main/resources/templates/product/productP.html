@@ -185,7 +185,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${product.productCategory?.categoryName} ?: 'N/A'"></td>
                                 <td class="px-6 py-4 whitespace-nowrap font-medium" th:text="${#numbers.formatDecimal(product.productPrice, 1, 0)} + '  RWF'"></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${#temporals.format(product.manufacturedDate, 'yyyy-MM-dd')}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${#temporals.format(product.createdAt , 'yyyy-MM-dd')}"></td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                      <!--<span th:switch="${product.stockState}" class="px-2 py-1 text-xs font-medium rounded-full">
                                          <span th:case="'AVAILABLE'" class="bg-green-100 text-green-800">In Stock</span>
