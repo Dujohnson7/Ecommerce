@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users Management - ECommerce Admin</title>
+    <title>Products Management - ECommerce Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
@@ -26,7 +26,7 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
                 <div class="space-y-1">
-                    <a href="../dashboard.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a href="dashboard.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
                         Dashboard
                     </a>
@@ -36,7 +36,7 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
                 <div class="space-y-1">
-                    <a href="users.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-900">
+                    <a href="users.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="users" class="w-4 h-4 mr-3"></i>
                         User Management
                     </a>
@@ -50,7 +50,7 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Customers</h3>
                 <div class="space-y-1">
-                    <a href="../customer/customerP.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a href="customers.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="user" class="w-4 h-4 mr-3"></i>
                         Customer List
                     </a>
@@ -64,15 +64,15 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
                 <div class="space-y-1">
-                    <a href="../product/productP.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a href="products.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-900">
                         <i data-lucide="package" class="w-4 h-4 mr-3"></i>
                         Products
                     </a>
-                    <a href="../customer/categories.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a href="categories.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
                         Categories
                     </a>
-                    <a href="../product/warehouses.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a href="warehouses.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="warehouse" class="w-4 h-4 mr-3"></i>
                         Warehouses
                     </a>
@@ -82,7 +82,7 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
                 <div class="space-y-1">
-                    <a href="../orders/orders.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a href="orders.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
                         Orders
                     </a>
@@ -101,8 +101,8 @@
         <header class="bg-white border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Users Management</h1>
-                    <p class="text-sm text-gray-600 mt-1">Manage system users and their roles</p>
+                    <h1 class="text-2xl font-semibold text-gray-900">Products Management</h1>
+                    <p class="text-sm text-gray-600 mt-1">Manage your product inventory and details</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button class="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-md">
@@ -118,138 +118,87 @@
             </div>
         </header>
 
-        <!-- Users Management Content -->
+        <!-- Products Management Content -->
         <main class="flex-1 overflow-auto p-6">
             <div class="max-w-7xl mx-auto space-y-6">
-                <!-- Metrics Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg border border-gray-200 p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Total Users</p>
-                                <p class="text-3xl font-bold text-gray-900 mt-2">247</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                                <i data-lucide="users" class="w-6 h-6 text-blue-600"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg border border-gray-200 p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Active Users</p>
-                                <p class="text-3xl font-bold text-gray-900 mt-2">198</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
-                                <i data-lucide="user-check" class="w-6 h-6 text-green-600"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-lg border border-gray-200 p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-600">Admins</p>
-                                <p class="text-3xl font-bold text-gray-900 mt-2">12</p>
-                            </div>
-                            <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center">
-                                <i data-lucide="crown" class="w-6 h-6 text-orange-600"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Create User Button -->
+                <!-- Add Product Button -->
                 <div class="flex justify-end">
-                    <button onclick="openModal('createUserModal')" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                    <button onclick="openModal('addProductModal')" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
                         <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-                        Create New User
+                        Add Product
                     </button>
                 </div>
 
                 <!-- Search and Filters -->
                 <div class="bg-white rounded-lg border border-gray-200 p-6">
-                    <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                        <div class="relative flex-1 max-w-md">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="relative">
                             <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
-                            <input type="text" placeholder="Search users..." class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <input type="text" placeholder="Search products..." class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
-                        <div class="flex gap-3">
-                            <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option>All Roles</option>
-                                <option>Admin</option>
-                                <option>Manager</option>
-                                <option>Customer</option>
-                                <option>Support</option>
-                            </select>
-                            <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option>All Status</option>
-                                <option>Active</option>
-                                <option>Inactive</option>
-                            </select>
-                            <button class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
-                                Filter
-                            </button>
-                            <button class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                <i data-lucide="download" class="w-4 h-4 mr-2"></i>
-                                Export
-                            </button>
-                        </div>
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option>All Categories</option>
+                            <option>Electronics</option>
+                            <option>Clothing</option>
+                            <option>Home & Garden</option>
+                        </select>
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option>All Warehouses</option>
+                            <option>Main Warehouse</option>
+                            <option>Secondary Warehouse</option>
+                        </select>
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option>Stock Status</option>
+                            <option>In Stock</option>
+                            <option>Low Stock</option>
+                            <option>Out of Stock</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Users Table -->
+                <!-- Products List -->
                 <div class="bg-white rounded-lg border border-gray-200">
+                    <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Products List</h2>
+                        <span class="text-sm text-gray-500">247 products total</span>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    <input type="checkbox" class="rounded border-gray-300">
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Warehouse</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="checkbox" class="rounded border-gray-300">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                                            <span class="text-sm font-medium text-gray-700">SJ</span>
-                                        </div>
+                                        <img src="/placeholder.svg?height=40&width=40" alt="iPhone 15 Pro" class="w-10 h-10 rounded-lg object-cover">
                                         <div>
-                                            <p class="font-medium text-gray-900">Sarah Johnson</p>
-                                            <p class="text-sm text-gray-500">ID: #001</p>
+                                            <p class="font-medium text-gray-900">iPhone 15 Pro</p>
+                                            <p class="text-sm text-gray-500">SKU: IPH15P-001</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">sarah.johnson@example.com</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Electronics</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">$999.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex gap-1 flex-wrap">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800">Admin</span>
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Manager</span>
-                                    </div>
+                                    <span class="font-medium">45</span>
+                                    <span class="text-sm text-gray-500 ml-1">units</span>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Main Warehouse</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">In Stock</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">2024-01-15</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
                                     <div class="flex items-center justify-end space-x-2">
                                         <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
-                                            <i data-lucide="eye" class="w-4 h-4"></i>
-                                        </button>
-                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </button>
                                         <button class="p-1 text-red-600 hover:bg-red-50 rounded">
@@ -261,33 +210,27 @@
 
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="checkbox" class="rounded border-gray-300">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                                            <span class="text-sm font-medium text-gray-700">MC</span>
-                                        </div>
+                                        <img src="/placeholder.svg?height=40&width=40" alt="AirPods Pro 2" class="w-10 h-10 rounded-lg object-cover">
                                         <div>
-                                            <p class="font-medium text-gray-900">Mike Chen</p>
-                                            <p class="text-sm text-gray-500">ID: #002</p>
+                                            <p class="font-medium text-gray-900">AirPods Pro 2</p>
+                                            <p class="text-sm text-gray-500">SKU: APP2-001</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">mike.chen@example.com</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Electronics</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">$249.00</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Customer</span>
+                                    <span class="font-medium">12</span>
+                                    <span class="text-sm text-gray-500 ml-1">units</span>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Main Warehouse</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Active</span>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">Low Stock</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">2024-01-10</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
                                     <div class="flex items-center justify-end space-x-2">
                                         <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
-                                            <i data-lucide="eye" class="w-4 h-4"></i>
-                                        </button>
-                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </button>
                                         <button class="p-1 text-red-600 hover:bg-red-50 rounded">
@@ -299,36 +242,59 @@
 
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="checkbox" class="rounded border-gray-300">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                                            <span class="text-sm font-medium text-gray-700">ED</span>
-                                        </div>
+                                        <img src="/placeholder.svg?height=40&width=40" alt="Premium Cotton T-Shirt" class="w-10 h-10 rounded-lg object-cover">
                                         <div>
-                                            <p class="font-medium text-gray-900">Emma Davis</p>
-                                            <p class="text-sm text-gray-500">ID: #003</p>
+                                            <p class="font-medium text-gray-900">Premium Cotton T-Shirt</p>
+                                            <p class="text-sm text-gray-500">SKU: TSH-001</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">emma.davis@example.com</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Clothing</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">$29.99</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex gap-1 flex-wrap">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Manager</span>
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">Support</span>
-                                    </div>
+                                    <span class="font-medium">0</span>
+                                    <span class="text-sm text-gray-500 ml-1">units</span>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Secondary Warehouse</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Inactive</span>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Out of Stock</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">2024-01-08</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
                                     <div class="flex items-center justify-end space-x-2">
                                         <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
-                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
                                         </button>
-                                        <button class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                        <button class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <img src="/placeholder.svg?height=40&width=40" alt="MacBook Pro 16" class="w-10 h-10 rounded-lg object-cover">
+                                        <div>
+                                            <p class="font-medium text-gray-900">MacBook Pro 16"</p>
+                                            <p class="text-sm text-gray-500">SKU: MBP16-001</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Electronics</td>
+                                <td class="px-6 py-4 whitespace-nowrap font-medium">$2,499.00</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="font-medium">23</span>
+                                    <span class="text-sm text-gray-500 ml-1">units</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600">Main Warehouse</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">In Stock</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </button>
                                         <button class="p-1 text-red-600 hover:bg-red-50 rounded">
@@ -364,47 +330,51 @@
     </div>
 </div>
 
-<!-- Create User Modal -->
-<div id="createUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+<!-- Add Product Modal -->
+<div id="addProductModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
         <div class="p-6 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">Create New User</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Add New Product</h3>
         </div>
         <div class="p-6">
             <form class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
                     <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">SKU</label>
+                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
                     <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>Customer</option>
-                        <option>Manager</option>
-                        <option>Admin</option>
-                        <option>Support</option>
+                        <option>Electronics</option>
+                        <option>Clothing</option>
+                        <option>Home & Garden</option>
+                        <option>Sports & Fitness</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                    <input type="number" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Warehouse</label>
                     <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>Active</option>
-                        <option>Inactive</option>
+                        <option>Main Warehouse</option>
+                        <option>Secondary Warehouse</option>
                     </select>
                 </div>
             </form>
         </div>
         <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-            <button onclick="closeModal('createUserModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
-            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">Create User</button>
+            <button onclick="closeModal('addProductModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">Add Product</button>
         </div>
     </div>
 </div>

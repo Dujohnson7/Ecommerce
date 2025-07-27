@@ -31,67 +31,63 @@
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
                 <div class="space-y-1">
-                    <a href="../dashboard.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/dashboard/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
                         Dashboard
                     </a>
                 </div>
             </div>
-
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
                 <div class="space-y-1">
-                    <a href="../auth/users.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a  th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="users" class="w-4 h-4 mr-3"></i>
                         User Management
                     </a>
-                    <a href="#" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/role/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="shield" class="w-4 h-4 mr-3"></i>
                         Role Management
                     </a>
                 </div>
             </div>
-
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Customers</h3>
                 <div class="space-y-1">
-                    <a href="../customer/customerP.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/customer/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="user" class="w-4 h-4 mr-3"></i>
                         Customer List
                     </a>
-                    <a href="#" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/address/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="map-pin" class="w-4 h-4 mr-3"></i>
                         Shipping Addresses
                     </a>
                 </div>
             </div>
-
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
                 <div class="space-y-1">
-                    <a href="productP.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/product/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="package" class="w-4 h-4 mr-3"></i>
                         Products
                     </a>
-                    <a href="../customer/categories.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/productCategory/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
                         Categories
                     </a>
-                    <a href="warehouses.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-900">
+                    <a th:href="@{/warehouse/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md  bg-gray-100 text-gray-900">
                         <i data-lucide="warehouse" class="w-4 h-4 mr-3"></i>
                         Warehouses
                     </a>
                 </div>
             </div>
-
             <div>
                 <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
                 <div class="space-y-1">
-                    <a href="../orders/orders.html" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/order/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
                         Orders
                     </a>
-                    <a href="#" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                    <a th:href="@{/payment/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
                         <i data-lucide="credit-card" class="w-4 h-4 mr-3"></i>
                         Payments
                     </a>

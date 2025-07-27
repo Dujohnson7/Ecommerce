@@ -3,6 +3,7 @@ package rw.ac.auca.ecommmerce.core.product.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import rw.ac.auca.ecommmerce.core.product.model.Product;
+import rw.ac.auca.ecommmerce.core.productCategory.model.ProductCategory;
 import rw.ac.auca.ecommmerce.core.util.product.EStockState;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public interface IProductRepository extends JpaRepository<Product , UUID> {
     List<Product> findAllByActive(Boolean active);
     List<Product> findAllByStockStateAndActive(EStockState state , Boolean active);
     List<Product> findALlByStockStateInAndActive(List<EStockState> states , Boolean active);
-
-
+    Optional<Product> findProductByProductCategory_Id(UUID id);
+    //List<ProductCategory> findAllProductCategories();
 }

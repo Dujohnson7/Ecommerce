@@ -5,9 +5,12 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 import rw.ac.auca.ecommmerce.core.product.model.Product;
 import rw.ac.auca.ecommmerce.core.product.repository.IProductRepository;
+import rw.ac.auca.ecommmerce.core.productCategory.repository.IProductCategoryRepository;
+import rw.ac.auca.ecommmerce.core.productCategory.model.ProductCategory;
 import rw.ac.auca.ecommmerce.core.util.product.EStockState;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -16,25 +19,52 @@ import java.util.UUID;
 public class ProductServiceImpl implements IProductService{
 
     private final IProductRepository productRepository;
+    private final IProductCategoryRepository productCategoryRepository;
 
     @Override
-    public Product createProduct(Product theProduct) {
+    public Product registerProduct (Product theProduct) {
         return productRepository.save(theProduct);
     }
 
     @Override
     public Product updateProduct(Product theProduct) {
-        return null;
+        Product found = findProductByIdAndState(theProduct.getId(), Boolean.TRUE);
+        if(Objects.nonNull(found)){
+            found.setProductPrice(theProduct.getProductPrice());
+            found.setProductName(theProduct.getProductName());
+            found.setProductCategory(theProduct.getProductCategory());
+            found.setProductDescription(theProduct.getProductDescription());
+            found.setProductPrice(theProduct.getProductPrice());
+            found.setStockState(theProduct.getStockState());
+            found.setManufacturedDate(theProduct.getManufacturedDate());
+            found.setExpirationDate(theProduct.getExpirationDate());
+            found.setStockState(theProduct.getStockState());
+            return productRepository.save(found);
+        }
+        throw new ObjectNotFoundException(ProductCategory.class, "Product  Not Found");
     }
 
     @Override
     public Product deleteProduct(Product theProduct) {
-        return null;
+
+        Product found = findProductByIdAndState(theProduct.getId() , Boolean.TRUE);
+        if(Objects.nonNull(found)){
+            found.setActive(Boolean.FALSE);
+            return productRepository.save(found);
+        }
+        throw new ObjectNotFoundException(Product.class , "Product Object not found");
     }
 
     @Override
     public Product findProductByIdAndState(UUID id, Boolean active) {
         Product theProduct = productRepository.findByIdAndActive(id , active)
+                .orElseThrow(() -> new ObjectNotFoundException(Product.class , "Product not Found"));
+        return theProduct;
+    }
+
+    @Override
+    public Product findProductByProductCategory_Id(UUID id) {
+        Product theProduct = productRepository.findProductByProductCategory_Id(id)
                 .orElseThrow(() -> new ObjectNotFoundException(Product.class , "Product not Found"));
         return theProduct;
     }
@@ -53,4 +83,11 @@ public class ProductServiceImpl implements IProductService{
     public List<Product> findProductsByStockStatesAndState(List<EStockState> stockStates, Boolean active) {
         return productRepository.findALlByStockStateInAndActive(stockStates,active);
     }
+
+    @Override
+    public List<ProductCategory> findAllCategories() {
+        return productCategoryRepository.findAll();
+    }
+
+
 }

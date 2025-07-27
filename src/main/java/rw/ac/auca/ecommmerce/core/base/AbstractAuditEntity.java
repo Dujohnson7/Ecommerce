@@ -11,7 +11,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 
-@Getter @Setter
+@Getter
+@Setter
 @MappedSuperclass
 public abstract class AbstractAuditEntity {
     @CreationTimestamp

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role Management - ECommerce Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <div class="w-64 bg-white border-r border-gray-200 flex flex-col order-1">
+    <!-- Logo -->
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="text-lg font-semibold text-gray-900">ECommerce Admin</span>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 p-4 space-y-6">
+      <div>
+        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
+        <div class="space-y-1">
+          <a th:href="@{/dashboard/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
+            Dashboard
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
+        <div class="space-y-1">
+          <a  th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+            User Management
+          </a>
+          <a th:href="@{/role/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-900">
+            <i data-lucide="shield" class="w-4 h-4 mr-3"></i>
+            Role Management
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Customers</h3>
+        <div class="space-y-1">
+          <a th:href="@{/customer/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="user" class="w-4 h-4 mr-3"></i>
+            Customer List
+          </a>
+          <a th:href="@{/address/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="map-pin" class="w-4 h-4 mr-3"></i>
+            Shipping Addresses
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
+        <div class="space-y-1">
+          <a th:href="@{/product/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="package" class="w-4 h-4 mr-3"></i>
+            Products
+          </a>
+          <a th:href="@{/productCategory/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
+            Categories
+          </a>
+          <a th:href="@{/warehouse/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="warehouse" class="w-4 h-4 mr-3"></i>
+            Warehouses
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
+        <div class="space-y-1">
+          <a th:href="@{/order/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
+            Orders
+          </a>
+          <a th:href="@{/payment/}"  class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+            <i data-lucide="credit-card" class="w-4 h-4 mr-3"></i>
+            Payments
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden order-2">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-semibold text-gray-900">Role Management</h1>
+          <p class="text-sm text-gray-600 mt-1">Manage user roles and permissions for system access control</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-md">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+          </button>
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+              <span class="text-sm font-medium text-gray-700">DJ</span>
+            </div>
+            <span class="text-sm font-medium text-gray-700">DuJohnson</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+      <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Page Header -->
+        <div class="mb-8">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900">Role Management</h1>
+              <p class="mt-1 text-sm text-gray-600">Manage user roles and permissions for system access control</p>
+            </div>
+            <button onclick="openModal('addRoleModal')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Add Role</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+              <div class="p-2 bg-blue-100 rounded-lg">
+                <i data-lucide="shield" class="w-6 h-6 text-blue-600"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Roles</p>
+                <p class="text-2xl font-bold text-gray-900">8</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+              <div class="p-2 bg-green-100 rounded-lg">
+                <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Active Roles</p>
+                <p class="text-2xl font-bold text-gray-900">6</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+              <div class="p-2 bg-yellow-100 rounded-lg">
+                <i data-lucide="users" class="w-6 h-6 text-yellow-600"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Assigned Users</p>
+                <p class="text-2xl font-bold text-gray-900">156</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+              <div class="p-2 bg-purple-100 rounded-lg">
+                <i data-lucide="key" class="w-6 h-6 text-purple-600"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Permissions</p>
+                <p class="text-2xl font-bold text-gray-900">24</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+              <div class="relative">
+                <input type="text" placeholder="Search roles..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Permission Level</label>
+              <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">All Levels</option>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roles Table -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-medium text-gray-900">System Roles</h3>
+              <div class="flex items-center space-x-2">
+                <button class="text-gray-400 hover:text-gray-600">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                </button>
+                <button class="text-gray-400 hover:text-gray-600">
+                  <i data-lucide="filter" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <input type="checkbox" class="rounded border-gray-300">
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+              <tr th:each="rol : ${roles}">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <input type="checkbox" class="rounded border-gray-300">
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap font-medium text-sm text-gray-900" th:text="${rol.roleName}"></td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-900" th:text="${rol.roleDescription}"></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" > N/A </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex items-center space-x-2">
+                    <button class="text-blue-600 hover:text-blue-900">
+                      <i data-lucide="edit" class="w-4 h-4"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-900">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Pagination -->
+          <div class="px-6 py-4 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-gray-700">
+                Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">8</span> results
+              </div>
+              <div class="flex items-center space-x-2">
+                <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Previous</button>
+                <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-md">1</button>
+                <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">2</button>
+                <button class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Add Role Modal -->
+<div id="addRoleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto">
+    <form th:action="@{/role/register}" th:object="${role}" method="post">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-medium text-gray-900">Add New Role</h3>
+        <button onclick="closeModal('addRoleModal')" class="text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+    <div class="px-6 py-4 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Role Name</label>
+        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter role name"  th:field="*{roleName}" required>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3" placeholder="Describe the role and its responsibilities" th:field="*{roleDescription}"></textarea>
+      </div>
+    </div>
+    <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+      <button onclick="closeModal('addRoleModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">Cancel</button>
+      <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg">Create Role</button>
+    </div>
+      <div class="px-6 pb-4">
+        <span th:if="${message != null}" class="text-green-600 text-sm" th:text="${message}"></span>
+        <span th:if="${error != null}" class="text-red-600 text-sm" th:text="${error}"></span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+    document.getElementById(modalId).classList.add('flex');
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+    document.getElementById(modalId).classList.remove('flex');
+  }
+
+  window.onclick = function(event) {
+    if (event.target.classList.contains('bg-black')) {
+      closeModal('addRoleModal');
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal('addRoleModal');
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+  });
+</script>
+</body>
+</html>

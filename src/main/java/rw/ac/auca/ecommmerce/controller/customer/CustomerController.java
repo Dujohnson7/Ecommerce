@@ -3,22 +3,21 @@ package rw.ac.auca.ecommmerce.controller.customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import rw.ac.auca.ecommmerce.core.customer.model.Customer;
 import rw.ac.auca.ecommmerce.core.customer.service.ICustomerService;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/customer")
+@RequestMapping("/customer/")
 public class CustomerController {
     private final ICustomerService customerService;
 
-    @GetMapping("/search/all")
+    @GetMapping({"/","/search/all"})
     public String getAllCustomers(Model model) {
         model.addAttribute("customer", new Customer());
         List<Customer> customers = customerService.findCustomersByState(Boolean.TRUE);
@@ -29,7 +28,6 @@ public class CustomerController {
     @GetMapping("/register")
     public String getCustomerRegistrationPage(Model model) {
         model.addAttribute("customer", new Customer());
-        model.addAttribute("customers", List.of());
         return "customer/customerP";
     }
 
@@ -49,5 +47,39 @@ public class CustomerController {
 
         model.addAttribute("customers", customerService.findCustomersByState(Boolean.TRUE));
         return "customer/customerP";
+    }
+
+
+    @PostMapping("/delete")
+    public String deleteCustomer(@RequestParam("id") String id, Model model){
+        if(Objects.nonNull(id)){
+            Customer theCustomer = new Customer();
+            theCustomer.setId(UUID.fromString(id));
+            customerService.deleteCustomer(theCustomer);
+        }
+        return "redirect:/customer/";
+    }
+
+    @PostMapping("/update")
+    public String updateCustomer(@RequestParam("id") String id, Model model){
+        if(Objects.nonNull(id)){
+            Customer theCustomer = customerService
+                    .findCustomerByIdAndState(UUID.fromString(id) , Boolean.TRUE);
+            if(Objects.nonNull(theCustomer)){
+                model.addAttribute("customer" , theCustomer);
+                return "customer/";
+            }
+        }
+        model.addAttribute("error" , "Wrong Information");
+        return "customer/customerP";
+    }
+
+    @PostMapping("/updateCustomer")
+    public String updateCustomer(@ModelAttribute("customer") Customer theCustomer,  Model model){
+        if(Objects.nonNull(theCustomer)){
+            System.out.println("The customer: "+theCustomer);
+            customerService.updateCustomer(theCustomer);
+        }
+        return "redirect:/customer/search/all";
     }
 }

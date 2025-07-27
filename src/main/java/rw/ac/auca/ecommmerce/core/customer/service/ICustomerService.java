@@ -7,7 +7,6 @@ import java.util.UUID;
 
 
 public interface ICustomerService {
-    // method signature or definition
     Customer registerCustomer(Customer theCustomer);
     Customer updateCustomer(Customer theCustomer);
     Customer deleteCustomer(Customer theCustomer);
