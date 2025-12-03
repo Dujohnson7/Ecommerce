@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GuraShop</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/891/891462.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <!-- Logo -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <h1 class="text-2xl font-bold text-blue-600">GuraShop</h1>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 p-4 space-y-6">
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/dashboard/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600  bg-gray-100 text-gray-900 ">
+                        <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+                        User Management
+                    </a>
+                    <a th:href="@{/role/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shield" class="w-4 h-4 mr-3"></i>
+                        Role Management
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 ">
+                        <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+                        Customer List
+                    </a>
+                    <a th:href="@{/address/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="map-pin" class="w-4 h-4 mr-3"></i>
+                        Shipping Addresses
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/product/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="package" class="w-4 h-4 mr-3"></i>
+                        Products
+                    </a>
+                    <a th:href="@{/productCategory/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
+                        Categories
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/order/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
+                        Orders
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="space-y-1" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600 text-white">
+                            <i data-lucide="log-out" class="w-4 h-4 mr-3"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Customer Management</h1>
+                    <p class="text-sm text-gray-600 mt-1">Manage customer profiles, orders, and account information</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3" sec:authorize="isAuthenticated()">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-medium text-gray-700" th:text="${#strings.substring(username, 0, 1)}"></span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700" th:text="${username}"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Customer Management Content -->
+        <main class="flex-1 overflow-auto p-6">
+            <div class="max-w-7xl mx-auto space-y-6">
+                <!-- Add Customer Button -->
+                <div class="flex justify-end">
+                    <button onclick="openModal('addCustomerModal')" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        Add Customer
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                            <div class="relative">
+                                <input type="text" id="customerSearch" placeholder="Search customers..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="customerStatusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer List -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium text-gray-900">Customers</h3>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="filter" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full" id="customersTable">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tr th:each="cust : ${customers}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                                            <span class="text-sm font-medium text-gray-700" th:text="${cust.firstName.substring(0,1) + cust.lastName.substring(0,1)}"></span>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-900" th:text="${cust.firstName + ' ' + cust.lastName}"></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${cust.email}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${cust.phoneNumber}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full"
+                                          th:classappend="${cust.active} ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                                          th:text="${cust.active} ? 'Active' : 'Inactive'">
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <a th:href="@{'/customer/view/' + ${cust.id}}" class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </a>
+                                        <a th:href="@{'/customer/edit/' + ${cust.id}}" class="p-1 text-green-600 hover:bg-green-50 rounded">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </a>
+                                        <a th:href="@{'/customer/delete/' + ${cust.id}}" class="p-1 text-red-600 hover:bg-red-50 rounded">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                           <!-- <tr th:if="${customers.empty}">
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">No customers found</td>
+                            </tr>----->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="px-6 py-4 border-t border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-700">
+                                Showing <span class="font-medium" id="paginationStart">1</span> to <span class="font-medium" id="paginationEnd">10</span> of <span class="font-medium" id="paginationTotal" th:text="${customers != null ? customers.size() : 0}">0</span> results
+                            </div>
+                            <div class="flex items-center space-x-2" id="paginationButtons">
+                                <button id="prevBtn" class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50" disabled>Previous</button>
+                                <div id="pageNumbers" class="flex items-center space-x-1"></div>
+                                <button id="nextBtn" class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Create/Update User Modal -->
+<div id="addCustomerModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900" th:text="${customer.id != null} ? 'Update User' : 'Create New User'"></h3>
+        </div>
+        <div class="p-6">
+            <form th:action="@{/customer/register}" th:object="${customer}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" th:field="*{id}"/>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <input type="text" th:field="*{firstName}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <input type="text" th:field="*{lastName}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" th:field="*{email}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                        <input type="text" th:field="*{phoneNumber}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input type="text" th:field="*{username}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div th:classappend="${customer.id != null} ? 'hidden' : ''">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" th:field="*{password}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" th:required="${customer.id == null}"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                        <select th:field="*{role.id}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select a Role</option>
+                            <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.roleName}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                        <select id="provinceState" name="provinceState" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select Province</option>
+                            <option th:each="province : ${provinces}" th:value="${province}" th:text="${province}" th:selected="${customer.address != null and customer.address.provinceState.name() == province}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
+                        <select id="districtState" name="districtState" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select District</option>
+                            <option th:each="district : ${districts}" th:value="${district}" th:text="${district}" th:selected="${customer.address != null and customer.address.districtState.name() == district}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sector</label>
+                        <input type="text" th:field="*{sector}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Street</label>
+                        <input type="text" th:field="*{street}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('createUserModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md" th:text="${customer.id != null} ? 'Update User' : 'Create User'"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    // Pagination and Filtering for Customers
+    let customerCurrentPage = 1;
+    const customerItemsPerPage = 10;
+    let customerAllRows = [];
+    let customerFilteredRows = [];
+
+    function initCustomerTablePagination() {
+        const table = document.getElementById('customersTable');
+        if (!table) return;
+        
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+        
+        customerAllRows = Array.from(tbody.querySelectorAll('tr'));
+        customerFilteredRows = [...customerAllRows];
+        
+        const searchInput = document.getElementById('customerSearch');
+        const statusFilter = document.getElementById('customerStatusFilter');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', applyCustomerFilters);
+        }
+        if (statusFilter) {
+            statusFilter.addEventListener('change', applyCustomerFilters);
+        }
+        
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (customerCurrentPage > 1) {
+                    customerCurrentPage--;
+                    renderCustomerTable();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(customerFilteredRows.length / customerItemsPerPage);
+                if (customerCurrentPage < totalPages) {
+                    customerCurrentPage++;
+                    renderCustomerTable();
+                }
+            });
+        }
+        
+        renderCustomerTable();
+    }
+
+    function applyCustomerFilters() {
+        const searchTerm = document.getElementById('customerSearch')?.value.toLowerCase() || '';
+        const statusFilter = document.getElementById('customerStatusFilter')?.value || '';
+        
+        customerFilteredRows = customerAllRows.filter(row => {
+            const text = row.textContent.toLowerCase();
+            const statusMatch = !statusFilter || text.includes(statusFilter.toLowerCase());
+            const searchMatch = !searchTerm || text.includes(searchTerm);
+            
+            return statusMatch && searchMatch;
+        });
+        
+        customerCurrentPage = 1;
+        renderCustomerTable();
+    }
+
+    function renderCustomerTable() {
+        const tbody = document.querySelector('#customersTable tbody');
+        if (!tbody) return;
+        
+        const start = (customerCurrentPage - 1) * customerItemsPerPage;
+        const end = start + customerItemsPerPage;
+        const pageRows = customerFilteredRows.slice(start, end);
+        
+        tbody.innerHTML = '';
+        pageRows.forEach(row => tbody.appendChild(row.cloneNode(true)));
+        
+        updateCustomerPaginationInfo();
+        updateCustomerPaginationButtons();
+        
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function updateCustomerPaginationInfo() {
+        const total = customerFilteredRows.length;
+        const start = total === 0 ? 0 : (customerCurrentPage - 1) * customerItemsPerPage + 1;
+        const end = Math.min(customerCurrentPage * customerItemsPerPage, total);
+        
+        const startEl = document.getElementById('paginationStart');
+        const endEl = document.getElementById('paginationEnd');
+        const totalEl = document.getElementById('paginationTotal');
+        
+        if (startEl) startEl.textContent = start;
+        if (endEl) endEl.textContent = end;
+        if (totalEl) totalEl.textContent = total;
+    }
+
+    function updateCustomerPaginationButtons() {
+        const totalPages = Math.ceil(customerFilteredRows.length / customerItemsPerPage);
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageNumbers = document.getElementById('pageNumbers');
+        
+        if (prevBtn) prevBtn.disabled = customerCurrentPage === 1;
+        if (nextBtn) nextBtn.disabled = customerCurrentPage === totalPages || totalPages === 0;
+        
+        if (pageNumbers) {
+            pageNumbers.innerHTML = '';
+            const maxPages = 5;
+            let startPage = Math.max(1, customerCurrentPage - Math.floor(maxPages / 2));
+            let endPage = Math.min(totalPages, startPage + maxPages - 1);
+            
+            if (endPage - startPage < maxPages - 1) {
+                startPage = Math.max(1, endPage - maxPages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1 text-sm rounded-md ${i === customerCurrentPage ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`;
+                btn.textContent = i;
+                btn.addEventListener('click', () => {
+                    customerCurrentPage = i;
+                    renderCustomerTable();
+                });
+                pageNumbers.appendChild(btn);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        lucide.createIcons();
+        initCustomerTablePagination();
+
+        const provinceSelect = document.getElementById('provinceState');
+        const districtSelect = document.getElementById('districtState');
+
+        if (provinceSelect && districtSelect) {
+            // Load districts for the selected province on page load (for update case)
+            const selectedProvince = provinceSelect.value;
+            if (selectedProvince) {
+                fetch(`/customer/districts-by-province?province=${selectedProvince}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        districtSelect.options.length = 1; // Clear current options except placeholder
+                        data.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district;
+                            option.textContent = district;
+                            if (districtSelect.dataset.selected == district) {
+                                option.selected = true;
+                            }
+                            districtSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading districts:', error));
+            }
+
+            // Dynamic district loading on province change
+            provinceSelect.addEventListener('change', function () {
+                const selectedProvince = this.value;
+                districtSelect.options.length = 1; // Clear current options except placeholder
+
+                if (!selectedProvince) return;
+
+                fetch(`/customer/districts-by-province?province=${selectedProvince}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(district => {
+                            const option = document.createElement('option');
+                            option.value = district;
+                            option.textContent = district;
+                            districtSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading districts:', error));
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GuraShop</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/891/891462.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <!-- Logo -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <h1 class="text-2xl font-bold text-blue-600">GuraShop</h1>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 p-4 space-y-6">
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/dashboard/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 ">
+                        <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+                        User Management
+                    </a>
+                    <a th:href="@{/role/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shield" class="w-4 h-4 mr-3"></i>
+                        Role Management
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Customers</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/customer/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="user" class="w-4 h-4 mr-3"></i>
+                        Customer List
+                    </a>
+                    <a th:href="@{/address/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="map-pin" class="w-4 h-4 mr-3"></i>
+                        Shipping Addresses
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/product/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="package" class="w-4 h-4 mr-3"></i>
+                        Products
+                    </a>
+                    <a th:href="@{/productCategory/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
+                        Categories
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/order/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
+                        Orders
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="space-y-1" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600 text-white">
+                            <i data-lucide="log-out" class="w-4 h-4 mr-3"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Users Management</h1>
+                    <p class="text-sm text-gray-600 mt-1">Manage system users and their roles</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3" sec:authorize="isAuthenticated()">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-medium text-gray-700" th:text="${#strings.substring(username, 0, 1)}"></span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700" th:text="${username}"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Users Management Content -->
+        <main class="flex-1 overflow-auto p-6">
+            <div class="max-w-7xl mx-auto space-y-6">
+                <!-- Error/Success Messages -->
+                <div th:if="${message}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span th:text="${message}"></span>
+                </div>
+                <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <!-- Create User Button -->
+                <div class="flex justify-end">
+                    <button onclick="openModal('createUserModal', true)" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                        Create New User
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                            <div class="relative">
+                                <input type="text" id="userSearch" placeholder="Search users..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                            <select id="userRoleFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">All Roles</option>
+                                <option th:each="role : ${roles}" th:value="${role.roleName}" th:text="${role.roleName}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium text-gray-900">Users</h3>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="filter" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full" id="usersTable">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tr th:each="user : ${users}" th:attr="data-user-id=${user.id}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                                            <span class="text-sm font-medium text-gray-700" th:text="${#strings.substring(user.firstName, 0, 1) + #strings.substring(user.lastName, 0, 1)}"></span>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-900" th:text="${user.firstName + ' ' + user.lastName}"></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${user.email}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${user.username}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${user.role.roleName}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${user.address != null} ? ${user.address.provinceState + ', ' + user.address.districtState + ', ' + user.sector} : 'No Address'"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-gray-600" th:text="${#temporals.format(user.createdAt , 'yyyy-MM-dd')}"></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="view-user-btn p-1 text-blue-600 hover:bg-blue-50 rounded" th:attr="data-user-id=${user.id}">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="edit-user-btn p-1 text-green-600 hover:bg-green-50 rounded" th:attr="data-user-id=${user.id}">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="delete-user-btn p-1 text-red-600 hover:bg-red-50 rounded" th:attr="data-user-id=${user.id}">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="px-6 py-4 border-t border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-700">
+                                Showing <span class="font-medium" id="paginationStart">1</span> to <span class="font-medium" id="paginationEnd">10</span> of <span class="font-medium" id="paginationTotal" th:text="${users != null ? users.size() : 0}">0</span> results
+                            </div>
+                            <div class="flex items-center space-x-2" id="paginationButtons">
+                                <button id="prevBtn" class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50" disabled>Previous</button>
+                                <div id="pageNumbers" class="flex items-center space-x-1"></div>
+                                <button id="nextBtn" class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Create/Update User Modal -->
+<div id="createUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 id="modalTitle" class="text-lg font-semibold text-gray-900">Create New User</h3>
+        </div>
+        <div class="p-6">
+            <form id="userForm" th:action="@{/users/register}" th:object="${user}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" th:field="*{id}"/>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <input type="text" th:field="*{firstName}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <input type="text" th:field="*{lastName}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" th:field="*{email}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                        <input type="text" th:field="*{phoneNumber}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                        <input type="text" th:field="*{username}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div th:classappend="${user.id != null} ? 'hidden' : ''">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" th:field="*{password}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" th:required="${user.id == null}"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                        <select th:field="*{role.id}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select a Role</option>
+                            <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.roleName}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                        <select id="provinceState" name="provinceState" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select Province</option>
+                            <option th:each="province : ${provinces}" th:value="${province}" th:text="${province}" th:selected="${user.address != null and user.address.provinceState == T(province)}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
+                        <select id="districtState" name="districtState" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select District</option>
+                            <option th:each="district : ${districts}" th:value="${district}" th:text="${district}" th:selected="${user.address != null and user.address.districtState == T(district)}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sector</label>
+                        <input type="text" th:field="*{sector}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Street</label>
+                        <input type="text" th:field="*{street}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('createUserModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="submit" id="submitButton" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View User Modal -->
+<div id="viewUserModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">User Details</h3>
+                <button onclick="document.getElementById('viewUserModal').classList.add('hidden'); document.getElementById('viewUserModal').classList.remove('flex');" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-6">
+            <div id="viewUserContent" class="space-y-4">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 flex justify-end">
+            <button onclick="document.getElementById('viewUserModal').classList.add('hidden'); document.getElementById('viewUserModal').classList.remove('flex');" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Pagination and Filtering for Users
+    let userCurrentPage = 1;
+    const userItemsPerPage = 10;
+    let userAllRows = [];
+    let userFilteredRows = [];
+
+    function initUserTablePagination() {
+        const table = document.getElementById('usersTable');
+        if (!table) return;
+        
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+        
+        userAllRows = Array.from(tbody.querySelectorAll('tr'));
+        userFilteredRows = [...userAllRows];
+        
+        const searchInput = document.getElementById('userSearch');
+        const roleFilter = document.getElementById('userRoleFilter');
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', applyUserFilters);
+        }
+        if (roleFilter) {
+            roleFilter.addEventListener('change', applyUserFilters);
+        }
+        
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (userCurrentPage > 1) {
+                    userCurrentPage--;
+                    renderUserTable();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(userFilteredRows.length / userItemsPerPage);
+                if (userCurrentPage < totalPages) {
+                    userCurrentPage++;
+                    renderUserTable();
+                }
+            });
+        }
+        
+        renderUserTable();
+    }
+
+    function applyUserFilters() {
+        const searchTerm = document.getElementById('userSearch')?.value.toLowerCase() || '';
+        const roleFilter = document.getElementById('userRoleFilter')?.value || '';
+        
+        userFilteredRows = userAllRows.filter(row => {
+            const text = row.textContent.toLowerCase();
+            const roleMatch = !roleFilter || text.includes(roleFilter.toLowerCase());
+            const searchMatch = !searchTerm || text.includes(searchTerm);
+            
+            return roleMatch && searchMatch;
+        });
+        
+        userCurrentPage = 1;
+        renderUserTable();
+    }
+
+    function renderUserTable() {
+        const tbody = document.querySelector('#usersTable tbody');
+        if (!tbody) return;
+        
+        const start = (userCurrentPage - 1) * userItemsPerPage;
+        const end = start + userItemsPerPage;
+        const pageRows = userFilteredRows.slice(start, end);
+        
+        tbody.innerHTML = '';
+        pageRows.forEach(row => tbody.appendChild(row.cloneNode(true)));
+        
+        updateUserPaginationInfo();
+        updateUserPaginationButtons();
+        
+        if (window.lucide) lucide.createIcons();
+        attachUserActionListeners();
+    }
+
+    function updateUserPaginationInfo() {
+        const total = userFilteredRows.length;
+        const start = total === 0 ? 0 : (userCurrentPage - 1) * userItemsPerPage + 1;
+        const end = Math.min(userCurrentPage * userItemsPerPage, total);
+        
+        const startEl = document.getElementById('paginationStart');
+        const endEl = document.getElementById('paginationEnd');
+        const totalEl = document.getElementById('paginationTotal');
+        
+        if (startEl) startEl.textContent = start;
+        if (endEl) endEl.textContent = end;
+        if (totalEl) totalEl.textContent = total;
+    }
+
+    function updateUserPaginationButtons() {
+        const totalPages = Math.ceil(userFilteredRows.length / userItemsPerPage);
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageNumbers = document.getElementById('pageNumbers');
+        
+        if (prevBtn) prevBtn.disabled = userCurrentPage === 1;
+        if (nextBtn) nextBtn.disabled = userCurrentPage === totalPages || totalPages === 0;
+        
+        if (pageNumbers) {
+            pageNumbers.innerHTML = '';
+            const maxPages = 5;
+            let startPage = Math.max(1, userCurrentPage - Math.floor(maxPages / 2));
+            let endPage = Math.min(totalPages, startPage + maxPages - 1);
+            
+            if (endPage - startPage < maxPages - 1) {
+                startPage = Math.max(1, endPage - maxPages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1 text-sm rounded-md ${i === userCurrentPage ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`;
+                btn.textContent = i;
+                btn.addEventListener('click', () => {
+                    userCurrentPage = i;
+                    renderUserTable();
+                });
+                pageNumbers.appendChild(btn);
+            }
+        }
+    }
+
+    function attachUserActionListeners() {
+        document.querySelectorAll('.view-user-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                viewUser(userId);
+            });
+        });
+        
+        document.querySelectorAll('.edit-user-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                if (typeof openUpdateModal === 'function') {
+                    openUpdateModal(userId);
+                } else {
+                    window.location.href = '/users/edit/' + userId;
+                }
+            });
+        });
+        
+        document.querySelectorAll('.delete-user-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                deleteUser(userId);
+            });
+        });
+    }
+
+    function openModal(modalId, isCreate = false) {
+        const modal = document.getElementById(modalId);
+        const form = document.getElementById('userForm');
+        const submitButton = document.getElementById('submitButton');
+        const modalTitle = document.getElementById('modalTitle');
+
+        if (isCreate) {
+            form.reset();
+            form.action = '/users/register';
+            submitButton.textContent = 'Create User';
+            modalTitle.textContent = 'Create New User';
+            document.getElementById('provinceState').value = '';
+            document.getElementById('districtState').options.length = 1;
+        }
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    function openUpdateModal(userId) {
+        fetch(`/users/get/${userId}`)
+            .then(response => response.json())
+            .then(user => {
+                const form = document.getElementById('userForm');
+                form.querySelector('input[name="id"]').value = user.id || '';
+                form.querySelector('input[name="firstName"]').value = user.firstName || '';
+                form.querySelector('input[name="lastName"]').value = user.lastName || '';
+                form.querySelector('input[name="email"]').value = user.email || '';
+                form.querySelector('input[name="phoneNumber"]').value = user.phoneNumber || '';
+                form.querySelector('input[name="username"]').value = user.username || '';
+                form.querySelector('input[name="password"]').value = '';
+                form.querySelector('select[name="role.id"]').value = user.role?.id || '';
+                form.querySelector('input[name="sector"]').value = user.sector || '';
+                form.querySelector('input[name="street"]').value = user.street || '';
+
+                const provinceSelect = document.getElementById('provinceState');
+                const districtSelect = document.getElementById('districtState');
+                provinceSelect.value = user.address?.provinceState || '';
+
+                if (user.address?.provinceState) {
+                    fetch(`/users/districts-by-province?province=${encodeURIComponent(user.address.provinceState)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            districtSelect.options.length = 1;
+                            data.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district;
+                                option.textContent = district;
+                                if (district === user.address?.districtState) {
+                                    option.selected = true;
+                                }
+                                districtSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error loading districts:', error));
+                } else {
+                    districtSelect.options.length = 1;
+                }
+
+                form.action = '/users/update';
+                document.getElementById('submitButton').textContent = 'Update User';
+                document.getElementById('modalTitle').textContent = 'Update User';
+                openModal('createUserModal');
+            })
+            .catch(error => {
+                console.error('Error loading user:', error);
+                alert('Error loading user data');
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        lucide.createIcons();
+        initUserTablePagination();
+
+        const provinceSelect = document.getElementById('provinceState');
+        const districtSelect = document.getElementById('districtState');
+        const form = document.getElementById('userForm');
+
+        if (provinceSelect && districtSelect) {
+            provinceSelect.addEventListener('change', function () {
+                const selectedProvince = this.value;
+                districtSelect.options.length = 1;
+                districtSelect.disabled = !selectedProvince;
+
+                if (selectedProvince) {
+                    fetch(`/users/districts-by-province?province=${encodeURIComponent(selectedProvince)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district;
+                                option.textContent = district;
+                                districtSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error loading districts:', error));
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                if (!provinceSelect.value || !districtSelect.value) {
+                    event.preventDefault();
+                    alert('Please select both a province and a district.');
+                }
+            });
+        }
+    });
+
+    // View User Function
+    function viewUser(userId) {
+        const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+        if (!row) return;
+
+        const cells = row.querySelectorAll('td');
+        const name = cells[0].querySelector('.font-medium')?.textContent.trim() || 'N/A';
+        const email = cells[1].textContent.trim();
+        const username = cells[2].textContent.trim();
+        const role = cells[3].textContent.trim();
+        const address = cells[4].textContent.trim();
+        const created = cells[5].textContent.trim();
+
+        const viewContent = document.getElementById('viewUserContent');
+        if (viewContent) {
+            viewContent.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Name</p>
+                        <p class="text-base text-gray-900">${name}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Email</p>
+                        <p class="text-base text-gray-900">${email}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Username</p>
+                        <p class="text-base text-gray-900">${username}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Role</p>
+                        <p class="text-base text-gray-900">${role}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Address</p>
+                        <p class="text-base text-gray-900">${address}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Created</p>
+                        <p class="text-base text-gray-900">${created}</p>
+                    </div>
+                </div>
+            `;
+            const modal = document.getElementById('viewUserModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+    }
+
+    // Delete User Function
+    function deleteUser(userId) {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/users/delete';
+        
+        const csrfToken = document.querySelector('meta[name="_csrf"]');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]');
+        if (csrfToken && csrfHeader) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = csrfHeader.getAttribute('content');
+            csrfInput.value = csrfToken.getAttribute('content');
+            form.appendChild(csrfInput);
+        }
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        idInput.value = userId;
+        form.appendChild(idInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</body>
+</html>

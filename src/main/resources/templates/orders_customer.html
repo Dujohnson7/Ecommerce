@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>GuraShop - My Orders</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/891/891462.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .order-row:hover {
+            background-color: #f9fafb;
+            transition: background-color 0.2s ease;
+        }
+        .modal-enter {
+            animation: modalEnter 0.3s ease-out;
+        }
+        @keyframes modalEnter {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .grid-item {
+            transition: all 0.3s ease;
+        }
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .view-active {
+            background-color: #2563eb;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <a class="text-2xl font-bold text-blue-600" th:href="@{/}">GuraShop</a>
+            </div>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a th:href="@{/}" class="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="#products" class="text-gray-700 hover:text-blue-600">Products</a>
+                <a href="#about" class="text-gray-700 hover:text-blue-600">About</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600">Contact</a>
+                <a th:href="@{/orders}" class="text-gray-700 hover:text-blue-600 font-semibold">Orders</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button onclick="openCart()" class="relative p-2 text-gray-700 hover:text-blue-600">
+                    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <div class="relative" id="userMenu">
+                    <button onclick="toggleUserMenu()" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                        <span id="userNameDisplay" class="hidden md:block" th:text="${#authentication.principal?.username ?: 'Account'}">Account</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                    <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                        <div id="userLoggedMenu" class="hidden">
+                            <a th:href="@{/orders}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
+                            <a th:href="@{/profile}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <hr class="my-1">
+                            <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        </div>
+                        <div id="userGuestMenu">
+                            <a th:href="@{/login}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>
+                            <a th:href="@{/signup}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <h1 class="text-3xl font-bold text-gray-900">My Orders</h1>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <select id="orderFilter" onchange="filterOrders()" class="appearance-none bg-white border border-gray-300 rounded-md pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="canceled">Canceled</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <div class="flex bg-gray-100 rounded-lg p-1">
+                    <button id="gridViewBtn" onclick="switchView('grid')" class="px-3 py-1 rounded-lg view-active">
+                        <i data-lucide="grid" class="w-5 h-5"></i>
+                    </button>
+                    <button id="listViewBtn" onclick="switchView('list')" class="px-3 py-1 rounded-lg">
+                        <i data-lucide="list" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(orders)}" class="text-center py-12">
+            <i data-lucide="package" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+            <p class="text-gray-500 text-lg">You have no orders yet.</p>
+            <a th:href="@{/}" class="mt-4 inline-flex items-center bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                <i data-lucide="shopping-bag" class="w-5 h-5 mr-2"></i>
+                Shop Now
+            </a>
+        </div>
+
+        <!-- Grid View -->
+        <div id="gridView" th:unless="${#lists.isEmpty(orders)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="order : ${orders}" class="bg-white rounded-lg shadow-md overflow-hidden grid-item" th:attr="data-status=${order.orderState}, data-payment=${order.paymentState}">
+                <div class="p-4 border-b">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-bold text-lg">Order #<span th:text="${order.orderNumber}"></span></h3>
+                            <p class="text-sm text-gray-500" th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy')}"></p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span th:class="${order.orderState == 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                              order.orderState == 'PROCESSING' ? 'bg-blue-100 text-blue-800' :
+                                              order.orderState == 'DELIVERED' ? 'bg-green-100 text-green-800' :
+                                              order.orderState == 'CANCELED' ? 'bg-red-100 text-red-800' :
+                                              'bg-gray-100 text-gray-800' } "
+                                  class="px-2 py-1 rounded-full text-xs font-medium mb-1" th:text="${order.orderState}"></span>
+                            <span th:class="${order.paymentState == 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                              order.paymentState == 'PAID' ? 'bg-green-100 text-green-800' :
+                                              order.paymentState == 'REFUNDED' ? 'bg-blue-100 text-blue-800' :
+                                              'bg-gray-100 text-gray-800' } "
+                                  class="px-2 py-1 rounded-full text-xs font-medium" th:text="${order.paymentState}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <div class="mb-4">
+                        <h4 class="font-medium text-gray-700 mb-2">Items</h4>
+                        <div class="space-y-2">
+                            <div th:each="product : ${order.products}" class="flex items-center gap-3">
+                                <img th:src="${product.productProfile != null} ? ${product.productProfile} : '/upload/default.jpg'"
+                                     alt="Product image" class="w-10 h-10 rounded object-cover">
+                                <div>
+                                    <p class="text-sm font-medium" th:text="${product.productName}"></p>
+                                    <p class="text-xs text-gray-500" th:text="'RWF ' + ${#numbers.formatDecimal(product.productPrice, 1, 2)}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-3">
+                        <span class="font-bold" th:text="'RWF ' + ${#numbers.formatDecimal(order.orderAmount, 1, 2)}"></span>
+                        <div class="flex space-x-2">
+                            <button th:if="${order.paymentState == T(rw.ac.auca.ecommerce.core.util.order.EPaymentState).PENDING and order.orderState != T(rw.ac.auca.ecommerce.core.util.order.EOrderState).CANCELED}"
+                                    th:attr="data-order-id=${order.id}"
+                                    class="pay-button flex items-center bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
+                                <i data-lucide="credit-card" class="w-4 h-4 mr-1"></i> Pay
+                            </button>
+                            <button th:if="${order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).PENDING}"
+                                    th:attr="data-order-id=${order.id}"
+                                    class="cancel-button flex items-center bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                <i data-lucide="x" class="w-4 h-4 mr-1"></i> Cancel
+                            </button>
+                            <button th:if="${order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).PROCESSING or (order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).PENDING and order.paymentState == T(rw.ac.auca.ecommerce.core.util.order.EPaymentState).PAID)}"
+                                    th:attr="data-order-id=${order.id}"
+                                    class="receive-button flex items-center bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                                <i data-lucide="package-check" class="w-4 h-4 mr-1"></i> Receive
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div id="listView" th:unless="${#lists.isEmpty(orders)}" class="bg-white rounded-lg shadow-md overflow-hidden hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Order #</th>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Date</th>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Items</th>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Total</th>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Status</th>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Payment</th>
+                        <th class="py-3 px-4 text-left text-gray-700 font-medium">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                    <tr th:each="order : ${orders}" class="order-row" th:attr="data-status=${order.orderState}, data-payment=${order.paymentState}" onclick="showOrderDetails('${order.id}')">
+                        <td class="py-4 px-4" th:text="${order.orderNumber}"></td>
+                        <td class="py-4 px-4" th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy')}"></td>
+                        <td class="py-4 px-4" th:text="${order.products.size()} + ' item' + (${order.products.size()} != 1 ? 's' : '')"></td>
+                        <td class="py-4 px-4 font-medium" th:text="'RWF ' + ${#numbers.formatDecimal(order.orderAmount, 1, 2)}"></td>
+                        <td class="py-4 px-4">
+                                <span th:class="${order.orderState == 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                                  order.orderState == 'PROCESSING' ? 'bg-blue-100 text-blue-800' :
+                                                  order.orderState == 'DELIVERED' ? 'bg-green-100 text-green-800' :
+                                                  order.orderState == 'CANCELED' ? 'bg-red-100 text-red-800' :
+                                                   'bg-gray-100 text-gray-800' } "
+                                      class="px-3 py-1 rounded-full text-xs font-medium" th:text="${order.orderState}"></span>
+                        </td>
+                        <td class="py-4 px-4">
+                                <span th:class="${order.paymentState == 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                                  order.paymentState == 'PAID' ? 'bg-green-100 text-green-800' :
+                                                  order.paymentState == 'REFUNDED' ? 'bg-blue-100 text-blue-800' :
+                                                  'bg-gray-100 text-gray-800' } "
+                                      class="px-3 py-1 rounded-full text-xs font-medium" th:text="${order.paymentState}"></span>
+                        </td>
+                        <td class="py-4 px-4" onclick="event.stopPropagation()">
+                            <div class="flex space-x-2">
+                                <button th:if="${order.paymentState == T(rw.ac.auca.ecommerce.core.util.order.EPaymentState).PENDING and order.orderState != T(rw.ac.auca.ecommerce.core.util.order.EOrderState).CANCELED}"
+                                        th:attr="data-order-id=${order.id}"
+                                        class="pay-button flex items-center bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
+                                    <i data-lucide="credit-card" class="w-4 h-4 mr-1"></i> Pay
+                                </button>
+                                <button th:if="${order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).PENDING}"
+                                        th:attr="data-order-id=${order.id}"
+                                        class="cancel-button flex items-center bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                    <i data-lucide="x" class="w-4 h-4 mr-1"></i> Cancel
+                                </button>
+                                <button th:if="${order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).PROCESSING or (order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).PENDING and order.paymentState == T(rw.ac.auca.ecommerce.core.util.order.EPaymentState).PAID)}"
+                                        th:attr="data-order-id=${order.id}"
+                                        class="receive-button flex items-center bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
+                                    <i data-lucide="package-check" class="w-4 h-4 mr-1"></i> Receive
+                                </button>
+                                <button th:if="${order.orderState == T(rw.ac.auca.ecommerce.core.util.order.EOrderState).DELIVERED}"
+                                        th:attr="data-order-id=${order.id}"
+                                        class="refund-button flex items-center bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-900 text-sm">
+                                    <i data-lucide="undo" class="w-4 h-4 mr-1"></i> Refund
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Details Modal -->
+<div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto modal-enter">
+        <div class="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10">
+            <h3 class="text-xl font-bold flex items-center">
+                <i data-lucide="package" class="w-5 h-5 mr-2"></i>
+                Order Details
+            </h3>
+            <button onclick="closeOrderDetails()" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                        <i data-lucide="info" class="w-4 h-4 mr-2"></i>
+                        Order Information
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Order Number:</span>
+                            <span id="detailOrderNumber" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Date:</span>
+                            <span id="detailOrderDate" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Status:</span>
+                            <span id="detailOrderStatus" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Payment:</span>
+                            <span id="detailPaymentStatus" class="font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                        <i data-lucide="truck" class="w-4 h-4 mr-2"></i>
+                        Shipping Information
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Name:</span>
+                            <span id="detailShippingName" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Address:</span>
+                            <span id="detailShippingAddress" class="font-medium text-right"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Phone:</span>
+                            <span id="detailShippingPhone" class="font-medium"></span>
+                        </div>
+                        <div class="flex justify-between" id="detailTrackingContainer">
+                            <span class="text-gray-600">Tracking:</span>
+                            <span id="detailTrackingNumber" class="font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="font-semibold text-gray-700 mb-4 flex items-center">
+                <i data-lucide="list" class="w-4 h-4 mr-2"></i>
+                Order Items
+            </h4>
+            <div class="border rounded-lg overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-gray-700">Product</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Price</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Qty</th>
+                        <th class="py-3 px-4 text-left text-gray-700">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody id="orderItemsList" class="divide-y">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <div class="w-full md:w-1/3 space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span id="detailSubtotal" class="font-medium"></span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Shipping:</span>
+                        <span id="detailShippingCost" class="font-medium">RWF 0.00</span>
+                    </div>
+                    <div class="flex justify-between border-t pt-2">
+                        <span class="text-gray-600 font-semibold">Total:</span>
+                        <span id="detailTotal" class="font-bold text-lg"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t flex justify-end space-x-3">
+            <button onclick="closeOrderDetails()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center">
+                <i data-lucide="x" class="w-4 h-4 mr-2"></i>
+                Close
+            </button>
+            <button id="detailPayButton" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 hidden flex items-center">
+                <i data-lucide="credit-card" class="w-4 h-4 mr-2"></i>
+                Pay Now
+            </button>
+            <button id="detailCancelButton" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 hidden flex items-center">
+                <i data-lucide="x" class="w-4 h-4 mr-2"></i>
+                Cancel Order
+            </button>
+            <button id="detailReceiveButton" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hidden flex items-center">
+                <i data-lucide="package-check" class="w-4 h-4 mr-2"></i>
+                Mark as Received
+            </button>
+            <button id="detailRefundButton" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 hidden flex items-center">
+                <i data-lucide="undo" class="w-4 h-4 mr-2"></i>
+                Request Refund
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-md modal-enter">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h3 class="text-xl font-bold flex items-center">
+                <i data-lucide="credit-card" class="w-5 h-5 mr-2"></i>
+                Complete Payment
+            </h3>
+            <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-600">Order Total:</span>
+                    <span id="paymentOrderTotal" class="font-bold text-lg">RWF 0.00</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Order Number:</span>
+                    <span id="paymentOrderNumber" class="font-medium"></span>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <label class="block text-gray-700 mb-2">Select Payment Method</label>
+                <div class="grid grid-cols-2">
+                    <button onclick="selectPaymentMethod('mtn')" class="payment-method border rounded-lg p-3 flex flex-col items-center hover:border-blue-500">
+                        <img src="/uploads/mtnPay.png" alt="MTN Mobile Money" class="h-8 mb-2">
+                        <span class="text-sm">MTN Mobile Money</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="mtnPaymentForm" class="hidden">
+                <div class="mb-4">
+                    <label for="phoneNumber" class="block text-gray-700 mb-2">MTN Mobile Money Number</label>
+                    <input type="tel" id="phoneNumber" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="07XXXXXXXX">
+                </div>
+
+                <button onclick="processPayment()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 flex items-center justify-center">
+                    <i data-lucide="send" class="w-5 h-5 mr-2"></i>
+                    Pay with MTN Mobile Money
+                </button>
+            </div>
+
+            <div id="otherPaymentForms" class="hidden">
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i data-lucide="alert-triangle" class="h-5 w-5 text-yellow-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                Other payment methods are not yet implemented. Please use MTN Mobile Money for now.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cart Sidebar -->
+<div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50">
+    <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h2 class="text-lg font-semibold flex items-center">
+                <i data-lucide="shopping-cart" class="w-5 h-5 mr-2"></i>
+                Shopping Cart
+            </h2>
+            <button onclick="closeCart()" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4">
+            <div id="cartItems" class="space-y-4"></div>
+        </div>
+        <div class="border-t p-4">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-lg font-semibold">Total:</span>
+                <span id="cartTotal" class="text-lg font-bold text-blue-600">RWF 0.00</span>
+            </div>
+            <button onclick="proceedToCheckout()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                <i data-lucide="credit-card" class="w-5 h-5 mr-2"></i>
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+</div>
+<div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="closeCart()"></div>
+
+<!-- Notification -->
+<div id="notification" class="fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-[1000]">
+    <div class="flex items-center">
+        <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
+        <span id="notificationText">Product added to cart!</span>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 mr-2"></i>
+                    GuraShop
+                </h3>
+                <p class="text-gray-400">Your trusted online shopping destination with quality products and excellent service.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4 flex items-center">
+                    <i data-lucide="link" class="w-4 h-4 mr-2"></i>
+                    Quick Links
+                </h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#about" class="hover:text-white flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> About Us</a></li>
+                    <li><a href="#contact" class="hover:text-white flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> Contact</a></li>
+                    <li><a th:href="@{/orders}" class="hover:text-white flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> My Orders</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4 flex items-center">
+                    <i data-lucide="help-circle" class="w-4 h-4 mr-2"></i>
+                    Customer Service
+                </h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> FAQ</a></li>
+                    <li><a href="#" class="hover:text-white flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> Returns Policy</a></li>
+                    <li><a href="#" class="hover:text-white flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> Shipping Info</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4 flex items-center">
+                    <i data-lucide="share-2" class="w-4 h-4 mr-2"></i>
+                    Follow Us
+                </h4>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/" target="_blank" class="text-gray-400 hover:text-white">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://x.com/" class="text-gray-400 hover:text-white">
+                        <i data-lucide="twitter" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://www.instagram.com/" class="text-gray-400 hover:text-white">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 GuraShop. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    /*]]>*/
+</script>
+<script>
+    let cart = [];
+    let currentUser = null;
+    let currentOrderDetails = null;
+    let currentPaymentOrderId = null;
+    let selectedPaymentMethod = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.lucide) {
+            lucide.createIcons();
+        } else {
+            console.warn('Lucide not loaded. Icons may not display.');
+        }
+        fetchUserDetails();
+        fetchCart();
+        setupOrderActionListeners();
+    });
+
+    function fetchUserDetails() {
+        fetch('/api/user', {
+            method: 'GET',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 401) {
+                    currentUser = null;
+                    updateUserUI();
+                    return null;
+                }
+                throw new Error('Failed to fetch user details');
+            })
+            .then(data => {
+                if (data) {
+                    currentUser = { id: data.id, username: data.username };
+                    document.getElementById('userNameDisplay').textContent = currentUser.username;
+                    document.getElementById('userLoggedMenu').classList.remove('hidden');
+                    document.getElementById('userGuestMenu').classList.add('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user:', error);
+                currentUser = null;
+                updateUserUI();
+            });
+    }
+
+    function updateUserUI() {
+        if (!currentUser) {
+            document.getElementById('userNameDisplay').textContent = 'Account';
+            document.getElementById('userLoggedMenu').classList.add('hidden');
+            document.getElementById('userGuestMenu').classList.remove('hidden');
+        }
+    }
+
+    function fetchCart() {
+        if (!currentUser) {
+            updateCartUI();
+            return;
+        }
+        fetch('/api/cart', {
+            method: 'GET',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => response.ok ? response.json() : [])
+            .then(data => {
+                cart = data.items || [];
+                updateCartUI();
+            })
+            .catch(error => {
+                console.error('Error fetching cart:', error);
+                cart = [];
+                updateCartUI();
+            });
+    }
+
+    function addToCart(productId, productName, productPrice, productProfile) {
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                image: productProfile || '/upload/default.jpg',
+                quantity: 1
+            });
+        }
+        updateCartUI();
+        showNotification('Product added to cart!');
+        if (currentUser) {
+            saveCartToServer();
+        }
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        updateCartUI();
+        if (currentUser) {
+            saveCartToServer();
+        }
+    }
+
+    function updateQuantity(productId, newQuantity) {
+        if (newQuantity <= 0) {
+            removeFromCart(productId);
+            return;
+        }
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            item.quantity = newQuantity;
+            updateCartUI();
+            if (currentUser) {
+                saveCartToServer();
+            }
+        }
+    }
+
+    function saveCartToServer() {
+        fetch('/api/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({ items: cart })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to save cart');
+                }
+            })
+            .catch(error => {
+                console.error('Error saving cart:', error);
+                showNotification('Failed to save cart.', 'error');
+            });
+    }
+
+    function updateCartUI() {
+        const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById('cartCount').textContent = cartCount;
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>';
+            cartTotal.textContent = 'RWF 0.00';
+            return;
+        }
+        let total = 0;
+        cartItems.innerHTML = cart.map(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            return `
+                <div class="flex items-center space-x-4 p-3 border rounded-lg">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div class="flex-1">
+                        <h4 class="font-medium">${item.name}</h4>
+                        <p class="text-sm text-gray-600">RWF ${item.price.toFixed(2)} each</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})"
+                                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">
+                            <i data-lucide="minus" class="w-4 h-4"></i>
+                        </button>
+                        <span class="w-8 text-center">${item.quantity}</span>
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})"
+                                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="removeFromCart('${item.id}')"
+                                class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 ml-2">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        cartTotal.textContent = `RWF ${total.toFixed(2)}`;
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function openCart() {
+        document.getElementById('cartSidebar').classList.remove('translate-x-full');
+        document.getElementById('cartOverlay').classList.remove('hidden');
+    }
+
+    function closeCart() {
+        document.getElementById('cartSidebar').classList.add('translate-x-full');
+        document.getElementById('cartOverlay').classList.add('hidden');
+    }
+
+    function proceedToCheckout() {
+        if (cart.length === 0) {
+            showNotification('Your cart is empty!', 'error');
+            return;
+        }
+        if (!currentUser) {
+            showNotification('Please login to proceed with checkout', 'info');
+            window.location.href = '/login';
+            return;
+        }
+        fetch('/api/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                items: cart.map(item => ({
+                    id: item.id,
+                    quantity: item.quantity,
+                    price: item.price
+                }))
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        showNotification('Please login to proceed with checkout', 'info');
+                        window.location.href = '/login';
+                        return;
+                    }
+                    return response.text().then(text => { throw new Error(text || 'Checkout failed'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    cart = [];
+                    updateCartUI();
+                    closeCart();
+                    showNotification('Order placed successfully!', 'success');
+                    window.location.href = '/orders';
+                }
+            })
+            .catch(error => {
+                console.error('Checkout error:', error);
+                showNotification(`Failed to place order: ${error.message}`, 'error');
+            });
+    }
+
+    function setupOrderActionListeners() {
+        document.querySelectorAll('.pay-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = button.getAttribute('data-order-id');
+                openPaymentModal(orderId);
+            });
+        });
+        document.querySelectorAll('.cancel-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = button.getAttribute('data-order-id');
+                cancelOrder(orderId);
+            });
+        });
+        document.querySelectorAll('.receive-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = button.getAttribute('data-order-id');
+                receiveOrder(orderId);
+            });
+        });
+        document.querySelectorAll('.refund-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const orderId = button.getAttribute('data-order-id');
+                refundOrder(orderId);
+            });
+        });
+    }
+
+    function filterOrders() {
+        const filterValue = document.getElementById('orderFilter').value.toLowerCase();
+        const viewType = document.getElementById('gridView').classList.contains('hidden') ? 'list' : 'grid';
+
+        if (viewType === 'grid') {
+            const items = document.querySelectorAll('#gridView > div');
+            items.forEach(item => {
+                const status = item.getAttribute('data-status').toLowerCase();
+                const payment = item.getAttribute('data-payment').toLowerCase();
+
+                if (filterValue === 'all' ||
+                    status.includes(filterValue) ||
+                    payment.includes(filterValue)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        } else {
+            const rows = document.querySelectorAll('.order-row');
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status').toLowerCase();
+                const payment = row.getAttribute('data-payment').toLowerCase();
+
+                if (filterValue === 'all' ||
+                    status.includes(filterValue) ||
+                    payment.includes(filterValue)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    function switchView(viewType) {
+        if (viewType === 'grid') {
+            document.getElementById('gridView').classList.remove('hidden');
+            document.getElementById('listView').classList.add('hidden');
+            document.getElementById('gridViewBtn').classList.add('view-active');
+            document.getElementById('listViewBtn').classList.remove('view-active');
+        } else {
+            document.getElementById('gridView').classList.add('hidden');
+            document.getElementById('listView').classList.remove('hidden');
+            document.getElementById('gridViewBtn').classList.remove('view-active');
+            document.getElementById('listViewBtn').classList.add('view-active');
+        }
+        // Reapply filter when switching views
+        filterOrders();
+    }
+
+    function openPaymentModal(orderId) {
+        currentPaymentOrderId = orderId;
+
+        // Fetch order details to display in payment modal
+        fetch(`/api/order/details/${orderId}`, {
+            method: 'GET',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch order details');
+                }
+                return response.json();
+            })
+            .then(order => {
+                document.getElementById('paymentOrderNumber').textContent = order.orderNumber;
+                document.getElementById('paymentOrderTotal').textContent = `RWF ${order.orderAmount.toFixed(2)}`;
+                document.getElementById('paymentModal').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error fetching order details:', error);
+                showNotification('Failed to load order details', 'error');
+            });
+    }
+
+    function closePaymentModal() {
+        document.getElementById('paymentModal').classList.add('hidden');
+        document.getElementById('mtnPaymentForm').classList.add('hidden');
+        document.getElementById('otherPaymentForms').classList.add('hidden');
+        selectedPaymentMethod = null;
+        currentPaymentOrderId = null;
+    }
+
+    function selectPaymentMethod(method) {
+        selectedPaymentMethod = method;
+
+        // Reset all payment method buttons
+        document.querySelectorAll('.payment-method').forEach(btn => {
+            btn.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+
+        // Highlight selected method
+        event.target.classList.add('border-blue-500', 'bg-blue-50');
+
+        // Show appropriate form
+        if (method === 'mtn') {
+            document.getElementById('mtnPaymentForm').classList.remove('hidden');
+            document.getElementById('otherPaymentForms').classList.add('hidden');
+        } else {
+            document.getElementById('mtnPaymentForm').classList.add('hidden');
+            document.getElementById('otherPaymentForms').classList.remove('hidden');
+        }
+    }
+
+    function processPayment() {
+        if (!selectedPaymentMethod || selectedPaymentMethod !== 'mtn') {
+            showNotification('Please select a payment method', 'error');
+            return;
+        }
+
+        const phoneNumber = document.getElementById('phoneNumber').value;
+
+        if (!phoneNumber || !phoneNumber.startsWith('078') || phoneNumber.length !== 10) {
+            showNotification('Please enter a valid MTN phone number (078xxxxxxx)', 'error');
+            return;
+        }
+
+        // Show loading state
+        const payButton = document.querySelector('#mtnPaymentForm button');
+        const originalText = payButton.innerHTML;
+        payButton.innerHTML = '<i data-lucide="loader" class="w-5 h-5 mr-2 animate-spin"></i> Processing...';
+
+        // Simulate payment processing (in a real app, this would call your backend)
+        setTimeout(() => {
+            // Call the actual payment endpoint
+            fetch(`/api/order/pay/${currentPaymentOrderId}`, {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text || 'Payment failed'); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    showNotification(data.message || 'Payment successful!', 'success');
+                    closePaymentModal();
+                    setTimeout(() => window.location.reload(), 1500);
+                })
+                .catch(error => {
+                    console.error('Payment error:', error);
+                    showNotification(`Payment failed: ${error.message}`, 'error');
+                })
+                .finally(() => {
+                    payButton.innerHTML = originalText;
+                });
+        }, 2000);
+    }
+
+    function showOrderDetails(orderId) {
+        fetch(`/api/order/details/${orderId}`, {
+            method: 'GET',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch order details');
+                }
+                return response.json();
+            })
+            .then(order => {
+                currentOrderDetails = order;
+                displayOrderDetails(order);
+                document.getElementById('orderDetailsModal').classList.remove('hidden');
+                if (window.lucide) lucide.createIcons();
+            })
+            .catch(error => {
+                console.error('Error fetching order details:', error);
+                showNotification('Failed to load order details', 'error');
+            });
+    }
+
+    function displayOrderDetails(order) {
+        // Basic order info
+        document.getElementById('detailOrderNumber').textContent = order.orderNumber;
+        document.getElementById('detailOrderDate').textContent = new Date(order.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+
+        // Status with colored badges
+        const statusElement = document.getElementById('detailOrderStatus');
+        statusElement.textContent = order.orderState;
+        statusElement.className = 'font-medium ' +
+            (order.orderState === 'PENDING' ? 'text-yellow-600' :
+                order.orderState === 'PROCESSING' ? 'text-blue-600' :
+                order.orderState === 'DELIVERED' ? 'text-green-600' :
+                    order.orderState === 'CANCELED' ? 'text-red-600' : 'text-gray-600');
+
+        const paymentElement = document.getElementById('detailPaymentStatus');
+        paymentElement.textContent = order.paymentState;
+        paymentElement.className = 'font-medium ' +
+            (order.paymentState === 'PENDING' ? 'text-yellow-600' :
+                order.paymentState === 'PAID' ? 'text-green-600' :
+                    order.paymentState === 'REFUNDED' ? 'text-blue-600' : 'text-gray-600');
+
+        // Shipping info
+        document.getElementById('detailShippingName').textContent = order.shippingName || 'Not specified';
+        document.getElementById('detailShippingAddress').textContent = order.shippingAddress || 'Not specified';
+        document.getElementById('detailShippingPhone').textContent = order.shippingPhone || 'Not specified';
+
+        // Tracking number if available
+        const trackingContainer = document.getElementById('detailTrackingContainer');
+        const trackingNumber = document.getElementById('detailTrackingNumber');
+        if (order.trackingNumber) {
+            trackingContainer.classList.remove('hidden');
+            trackingNumber.textContent = order.trackingNumber;
+        } else {
+            trackingContainer.classList.add('hidden');
+        }
+
+        // Order items
+        const itemsList = document.getElementById('orderItemsList');
+        itemsList.innerHTML = order.items.map(item => `
+            <tr>
+                <td class="py-3 px-4">
+                    <div class="flex items-center">
+                        <img src="${item.image || '/upload/default.jpg'}" alt="${item.name}"
+                             class="w-12 h-12 object-cover rounded mr-3">
+                        <div>
+                            <p class="font-medium">${item.name}</p>
+                            <p class="text-sm text-gray-500">${item.description || ''}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="py-3 px-4">RWF ${item.price.toFixed(2)}</td>
+                <td class="py-3 px-4">${item.quantity}</td>
+                <td class="py-3 px-4">RWF ${(item.price * item.quantity).toFixed(2)}</td>
+            </tr>
+        `).join('');
+
+        // Totals
+        document.getElementById('detailSubtotal').textContent = `RWF ${order.orderAmount.toFixed(2)}`;
+        document.getElementById('detailTotal').textContent = `RWF ${order.orderAmount.toFixed(2)}`;
+
+        // Action buttons
+        const payBtn = document.getElementById('detailPayButton');
+        const cancelBtn = document.getElementById('detailCancelButton');
+        const receiveBtn = document.getElementById('detailReceiveButton');
+        const refundBtn = document.getElementById('detailRefundButton');
+
+        // Hide all buttons first
+        payBtn.classList.add('hidden');
+        cancelBtn.classList.add('hidden');
+        receiveBtn.classList.add('hidden');
+        refundBtn.classList.add('hidden');
+
+        // Show relevant buttons based on order state
+        if (order.paymentState === 'PENDING' && order.orderState !== 'CANCELED') {
+            payBtn.classList.remove('hidden');
+            payBtn.onclick = () => {
+                openPaymentModal(order.id);
+                closeOrderDetails();
+            };
+        }
+
+        if (order.orderState === 'PENDING') {
+            cancelBtn.classList.remove('hidden');
+            cancelBtn.onclick = () => {
+                cancelOrder(order.id);
+                closeOrderDetails();
+            };
+        }
+
+        if (order.orderState === 'PROCESSING' || (order.orderState === 'PENDING' && order.paymentState === 'PAID')) {
+            receiveBtn.classList.remove('hidden');
+            receiveBtn.onclick = () => {
+                receiveOrder(order.id);
+                closeOrderDetails();
+            };
+        }
+
+        if (order.orderState === 'DELIVERED') {
+            refundBtn.classList.remove('hidden');
+            refundBtn.onclick = () => {
+                refundOrder(order.id);
+                closeOrderDetails();
+            };
+        }
+    }
+
+    function closeOrderDetails() {
+        document.getElementById('orderDetailsModal').classList.add('hidden');
+        currentOrderDetails = null;
+    }
+
+    function payOrder(orderId) {
+        openPaymentModal(orderId);
+    }
+
+    function cancelOrder(orderId) {
+        if (!confirm('Are you sure you want to cancel this order?')) return;
+
+        fetch(`/api/order/cancel/${orderId}`, {
+            method: 'POST',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text || 'Cancellation failed'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                showNotification(data.message || 'Order canceled successfully', 'success');
+                setTimeout(() => window.location.reload(), 1500);
+            })
+            .catch(error => {
+                console.error('Cancellation error:', error);
+                showNotification(`Failed to cancel order: ${error.message}`, 'error');
+            });
+    }
+
+    function receiveOrder(orderId) {
+        if (!confirm('Confirm you have received this order?')) return;
+
+        fetch(`/api/order/receive/${orderId}`, {
+            method: 'POST',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text || 'Receive failed'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                showNotification(data.message || 'Order marked as received', 'success');
+                setTimeout(() => window.location.reload(), 1500);
+            })
+            .catch(error => {
+                console.error('Receive error:', error);
+                showNotification(`Failed to receive order: ${error.message}`, 'error');
+            });
+    }
+
+    function refundOrder(orderId) {
+        if (!confirm('Are you sure you want to request a refund for this order?')) return;
+
+        fetch(`/api/order/refund/${orderId}`, {
+            method: 'POST',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text || 'Refund failed'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                showNotification(data.message || 'Refund requested successfully', 'success');
+                setTimeout(() => window.location.reload(), 1500);
+            })
+            .catch(error => {
+                console.error('Refund error:', error);
+                showNotification(`Failed to request refund: ${error.message}`, 'error');
+            });
+    }
+
+    function toggleUserMenu() {
+        document.getElementById('userDropdown').classList.toggle('hidden');
+    }
+
+    function logout() {
+        fetch('/logout', {
+            method: 'POST',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(() => {
+                currentUser = null;
+                cart = [];
+                updateCartUI();
+                showNotification('Logged out successfully', 'info');
+                window.location.href = '/login';
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                showNotification('Failed to logout. Please try again.', 'error');
+            });
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+
+        // Reset classes
+        notification.className = 'fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-[1000]';
+        notificationText.textContent = message;
+
+        // Set color based on type
+        const colors = {
+            success: 'bg-green-500 text-white',
+            error: 'bg-red-500 text-white',
+            info: 'bg-blue-500 text-white'
+        };
+
+        notification.classList.add(...colors[type].split(' '));
+
+        // Show notification
+        setTimeout(() => notification.classList.remove('translate-x-full'), 10);
+
+        // Hide after 3 seconds
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+        }, 3000);
+    }
+
+    document.addEventListener('click', function(event) {
+        const userMenu = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        if (userMenu && userDropdown && !userMenu.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>

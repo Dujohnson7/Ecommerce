@@ -1,0 +1,2 @@
+CREATE SEQUENCE order_number_seq;
+ALTER TABLE orders ALTER COLUMN order_number SET DEFAULT nextval('order_number_seq');

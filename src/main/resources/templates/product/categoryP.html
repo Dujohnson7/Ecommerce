@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GuraShop</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/891/891462.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <!-- Logo -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <h1 class="text-2xl font-bold text-blue-600">GuraShop</h1>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 p-4 space-y-6">
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Main</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/dashboard/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Authentication</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/users/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50 ">
+                        <i data-lucide="users" class="w-4 h-4 mr-3"></i>
+                        User Management
+                    </a>
+                    <a th:href="@{/role/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shield" class="w-4 h-4 mr-3"></i>
+                        Role Management
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Customers</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/customer/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="user" class="w-4 h-4 mr-3"></i>
+                        Customer List
+                    </a>
+                    <a th:href="@{/address/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="map-pin" class="w-4 h-4 mr-3"></i>
+                        Shipping Addresses
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Products</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/product/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="package" class="w-4 h-4 mr-3"></i>
+                        Products
+                    </a>
+                    <a th:href="@{/productCategory/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600    bg-gray-100 text-gray-900">
+                        <i data-lucide="layers" class="w-4 h-4 mr-3"></i>
+                        Categories
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Orders</h3>
+                <div class="space-y-1">
+                    <a th:href="@{/order/}" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                        <i data-lucide="shopping-cart" class="w-4 h-4 mr-3"></i>
+                        Orders
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="space-y-1" sec:authorize="isAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-md bg-red-600 text-white">
+                            <i data-lucide="log-out" class="w-4 h-4 mr-3"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Product Categories</h1>
+                    <p class="text-sm text-gray-600 mt-1">Manage and organize your product categories</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3" sec:authorize="isAuthenticated()">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                            <span class="text-sm font-medium text-gray-700" th:text="${#strings.substring(username, 0, 1)}"></span>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700" th:text="${username}"></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Categories Management Content -->
+        <main class="flex-1 overflow-auto p-6">
+            <div class="max-w-7xl mx-auto space-y-6">
+                <!-- Categories List Header -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold">Categories List</h2>
+                        <div class="flex items-center space-x-3">
+                            <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>All Status</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                            <button onclick="openModal('addCategoryModal')" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+                                <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                Add Category
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                            <div class="relative">
+                                <input type="text" id="categorySearch" placeholder="Search categories..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Table -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-medium text-gray-900">Categories</h3>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="filter" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full" id="categoriesTable">
+                            <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th> 
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tr th:each="cp : ${productCategories}" th:attr="data-category-id=${cp.id}">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                            <i th:attr="data-lucide=${cp.categoryIcon}" th:class="'w-5 h-5 ' +  (${cp.categoryIcon} == 'monitor' ? 'text-blue-600' :  (${cp.categoryIcon} == 'shirt' ? 'text-pink-600' :  (${cp.categoryIcon} == 'home' ? 'text-green-600' :   (${cp.categoryIcon} == 'trophy' ? 'text-yellow-600' :  (${cp.categoryIcon} == 'book-open' ? 'text-purple-600' :  'text-gray-500')))))"></i>
+                                        </div>
+                                        <span class="font-medium text-gray-900" th:text="${cp.categoryName}" ></span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600" th:text="${cp.categoryDescription}"></td> 
+                                <td class="px-6 py-4 whitespace-nowrap text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <button class="view-category-btn p-1 text-blue-600 hover:bg-blue-50 rounded" th:attr="data-category-id=${cp.id}">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="edit-category-btn p-1 text-green-600 hover:bg-green-50 rounded" 
+                                                th:attr="data-category-id=${cp.id},
+                                                         data-category-name=${cp.categoryName},
+                                                         data-category-description=${cp.categoryDescription},
+                                                         data-category-icon=${cp.categoryIcon}">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </button>
+                                        <button class="delete-category-btn p-1 text-red-600 hover:bg-red-50 rounded" th:attr="data-category-id=${cp.id}">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="px-6 py-4 border-t border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-700">
+                                Showing <span class="font-medium" id="paginationStart">1</span> to <span class="font-medium" id="paginationEnd">10</span> of <span class="font-medium" id="paginationTotal" th:text="${productCategories != null ? productCategories.size() : 0}">0</span> results
+                            </div>
+                            <div class="flex items-center space-x-2" id="paginationButtons">
+                                <button id="prevBtn" class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50" disabled>Previous</button>
+                                <div id="pageNumbers" class="flex items-center space-x-1"></div>
+                                <button id="nextBtn" class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Add New Category</h3>
+        </div>
+        <div class="p-6">
+            <form class="space-y-4" th:action="@{/productCategory/register}"  th:object="${productCategory}" method="post">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" th:field="*{categoryName}" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"  th:field="*{categoryDescription}"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"  th:field="*{categoryIcon}" required>
+                        <option value="monitor">monitor (Electronics)</option>
+                        <option value="shirt">shirt (Clothing)</option>
+                        <option value="home">home (Home & Garden)</option>
+                        <option value="trophy">trophy (Sports & Fitness)</option>
+                        <option value="book-open">book-open (Books & Media)</option>
+                    </select>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="closeModal('addCategoryModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Category Modal -->
+<div id="viewCategoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Category Details</h3>
+                <button onclick="closeModal('viewCategoryModal')" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-6">
+            <div id="viewCategoryContent" class="space-y-4">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-200 flex justify-end">
+            <button onclick="closeModal('viewCategoryModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div id="editCategoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Edit Category</h3>
+        </div>
+        <div class="p-6">
+            <form class="space-y-4" th:action="@{/productCategory/updateProductCategory}" method="post">
+                <input type="hidden" id="editCategoryId" name="id" value="">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+                    <input type="text" id="editCategoryName" name="categoryName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="editCategoryDescription" name="categoryDescription" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+                    <select id="editCategoryIcon" name="categoryIcon" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="monitor">monitor (Electronics)</option>
+                        <option value="shirt">shirt (Clothing)</option>
+                        <option value="home">home (Home & Garden)</option>
+                        <option value="trophy">trophy (Sports & Fitness)</option>
+                        <option value="book-open">book-open (Books & Media)</option>
+                    </select>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('editCategoryModal')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">Update Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+        document.getElementById(modalId).classList.add('flex');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+        document.getElementById(modalId).classList.remove('flex');
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('bg-gray-600')) {
+            event.target.classList.add('hidden');
+            event.target.classList.remove('flex');
+        }
+    }
+
+    // Pagination and Filtering for Categories
+    let categoryCurrentPage = 1;
+    const categoryItemsPerPage = 10;
+    let categoryAllRows = [];
+    let categoryFilteredRows = [];
+
+    function initCategoryTablePagination() {
+        const table = document.getElementById('categoriesTable');
+        if (!table) return;
+        
+        const tbody = table.querySelector('tbody');
+        if (!tbody) return;
+        
+        categoryAllRows = Array.from(tbody.querySelectorAll('tr'));
+        categoryFilteredRows = [...categoryAllRows];
+        
+        const searchInput = document.getElementById('categorySearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', applyCategoryFilters);
+        }
+        
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (categoryCurrentPage > 1) {
+                    categoryCurrentPage--;
+                    renderCategoryTable();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(categoryFilteredRows.length / categoryItemsPerPage);
+                if (categoryCurrentPage < totalPages) {
+                    categoryCurrentPage++;
+                    renderCategoryTable();
+                }
+            });
+        }
+        
+        renderCategoryTable();
+    }
+
+    function applyCategoryFilters() {
+        const searchTerm = document.getElementById('categorySearch')?.value.toLowerCase() || '';
+        categoryFilteredRows = categoryAllRows.filter(row => {
+            return !searchTerm || row.textContent.toLowerCase().includes(searchTerm);
+        });
+        categoryCurrentPage = 1;
+        renderCategoryTable();
+    }
+
+    function renderCategoryTable() {
+        const tbody = document.querySelector('#categoriesTable tbody');
+        if (!tbody) return;
+        
+        const start = (categoryCurrentPage - 1) * categoryItemsPerPage;
+        const end = start + categoryItemsPerPage;
+        const pageRows = categoryFilteredRows.slice(start, end);
+        
+        tbody.innerHTML = '';
+        pageRows.forEach(row => tbody.appendChild(row.cloneNode(true)));
+        
+        updateCategoryPaginationInfo();
+        updateCategoryPaginationButtons();
+        
+        if (window.lucide) lucide.createIcons();
+        attachCategoryActionListeners();
+    }
+
+    function updateCategoryPaginationInfo() {
+        const total = categoryFilteredRows.length;
+        const start = total === 0 ? 0 : (categoryCurrentPage - 1) * categoryItemsPerPage + 1;
+        const end = Math.min(categoryCurrentPage * categoryItemsPerPage, total);
+        
+        const startEl = document.getElementById('paginationStart');
+        const endEl = document.getElementById('paginationEnd');
+        const totalEl = document.getElementById('paginationTotal');
+        
+        if (startEl) startEl.textContent = start;
+        if (endEl) endEl.textContent = end;
+        if (totalEl) totalEl.textContent = total;
+    }
+
+    function updateCategoryPaginationButtons() {
+        const totalPages = Math.ceil(categoryFilteredRows.length / categoryItemsPerPage);
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageNumbers = document.getElementById('pageNumbers');
+        
+        if (prevBtn) prevBtn.disabled = categoryCurrentPage === 1;
+        if (nextBtn) nextBtn.disabled = categoryCurrentPage === totalPages || totalPages === 0;
+        
+        if (pageNumbers) {
+            pageNumbers.innerHTML = '';
+            const maxPages = 5;
+            let startPage = Math.max(1, categoryCurrentPage - Math.floor(maxPages / 2));
+            let endPage = Math.min(totalPages, startPage + maxPages - 1);
+            
+            if (endPage - startPage < maxPages - 1) {
+                startPage = Math.max(1, endPage - maxPages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1 text-sm rounded-md ${i === categoryCurrentPage ? 'bg-blue-600 text-white' : 'border border-gray-300 hover:bg-gray-50'}`;
+                btn.textContent = i;
+                btn.addEventListener('click', () => {
+                    categoryCurrentPage = i;
+                    renderCategoryTable();
+                });
+                pageNumbers.appendChild(btn);
+            }
+        }
+    }
+
+    function attachCategoryActionListeners() {
+        document.querySelectorAll('.view-category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const categoryId = this.getAttribute('data-category-id');
+                viewCategory(categoryId);
+            });
+        });
+        
+        document.querySelectorAll('.edit-category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const categoryId = this.getAttribute('data-category-id');
+                const name = this.getAttribute('data-category-name');
+                const description = this.getAttribute('data-category-description');
+                const icon = this.getAttribute('data-category-icon');
+                editCategory(categoryId, name, description, icon);
+            });
+        });
+        
+        document.querySelectorAll('.delete-category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const categoryId = this.getAttribute('data-category-id');
+                deleteCategory(categoryId);
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        lucide.createIcons();
+        initCategoryTablePagination();
+        
+        // Set up event listeners for category action buttons
+        document.addEventListener('click', function(e) {
+            // View button
+            if (e.target.closest('.view-category-btn')) {
+                const btn = e.target.closest('.view-category-btn');
+                const categoryId = btn.getAttribute('data-category-id');
+                viewCategory(categoryId);
+            }
+            
+            // Edit button
+            if (e.target.closest('.edit-category-btn')) {
+                const btn = e.target.closest('.edit-category-btn');
+                const categoryId = btn.getAttribute('data-category-id');
+                const name = btn.getAttribute('data-category-name');
+                const description = btn.getAttribute('data-category-description');
+                const icon = btn.getAttribute('data-category-icon');
+                editCategory(categoryId, name, description, icon);
+            }
+            
+            // Delete button
+            if (e.target.closest('.delete-category-btn')) {
+                const btn = e.target.closest('.delete-category-btn');
+                const categoryId = btn.getAttribute('data-category-id');
+                deleteCategory(categoryId);
+            }
+        });
+    });
+
+    // View Category Function
+    function viewCategory(categoryId) {
+        const row = document.querySelector(`tr[data-category-id="${categoryId}"]`);
+        if (!row) return;
+
+        const cells = row.querySelectorAll('td');
+        const name = cells[0].querySelector('.font-medium')?.textContent.trim() || 'N/A';
+        const description = cells[1].textContent.trim();
+
+        const viewContent = document.getElementById('viewCategoryContent');
+        if (viewContent) {
+            viewContent.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Category Name</p>
+                        <p class="text-base text-gray-900">${name}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Description</p>
+                        <p class="text-base text-gray-900">${description}</p>
+                    </div>
+                </div>
+            `;
+            openModal('viewCategoryModal');
+            if (window.lucide) lucide.createIcons();
+        }
+    }
+
+    // Edit Category Function
+    function editCategory(categoryId, name, description, icon) {
+        document.getElementById('editCategoryId').value = categoryId;
+        document.getElementById('editCategoryName').value = name || '';
+        document.getElementById('editCategoryDescription').value = description || '';
+        if (document.getElementById('editCategoryIcon')) {
+            document.getElementById('editCategoryIcon').value = icon || '';
+        }
+        openModal('editCategoryModal');
+    }
+
+    // Delete Category Function
+    function deleteCategory(categoryId) {
+        if (!confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/productCategory/delete';
+        
+        const csrfToken = document.querySelector('meta[name="_csrf"]');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]');
+        if (csrfToken && csrfHeader) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = csrfHeader.getAttribute('content');
+            csrfInput.value = csrfToken.getAttribute('content');
+            form.appendChild(csrfInput);
+        }
+
+        const idInput = document.createElement('input');
+        idInput.type = 'hidden';
+        idInput.name = 'id';
+        idInput.value = categoryId;
+        form.appendChild(idInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</body>
+</html>

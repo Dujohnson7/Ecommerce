@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuraShop - Online Store</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/891/891462.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-50">
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <a class="text-2xl font-bold text-blue-600" th:href="@{/}">GuraShop</a>
+            </div>
+
+            <div class="flex-1 max-w-lg mx-8">
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                    <input type="text" id="searchInput" placeholder="Search products..."
+                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           onkeyup="searchProducts()">
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-6">
+                <a th:href="@{/}" class="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="#products" class="text-gray-700 hover:text-blue-600">Products</a>
+                <a href="#about" class="text-gray-700 hover:text-blue-600">About</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600">Contact</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600">Order</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button onclick="openCart()" class="relative p-2 text-gray-700 hover:text-blue-600">
+                    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+
+                <div class="relative" id="userMenu">
+                    <button onclick="toggleUserMenu()" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                        <span id="userNameDisplay" class="hidden md:block">Account</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+
+                    <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                        <div id="userLoggedMenu" class="hidden">
+                            <a href="/orders" onclick="viewOrders()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
+                            <a href="/profile" onclick="viewProfile()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <hr class="my-1">
+                            <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        </div>
+                        <hr class="my-1">
+                        <a href="/admin/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>
+                        <a href="/admin/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">SignUp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">Welcome to GuraShop</h1>
+        <p class="text-xl md:text-2xl mb-8 opacity-90">Discover amazing products at unbeatable prices</p>
+        <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})"
+                class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            Shop Now
+        </button>
+    </div>
+</section>
+
+<section class="py-8 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="filterProducts('all')" class="filter-btn active px-6 py-2 rounded-full border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
+                All Products
+            </button>
+            <button th:each="category : ${productCategories}"
+                    th:data-category="${category.categoryName}"
+                    th:attr="onclick=|filterProducts('${category.categoryName}')|"
+                    class="filter-btn px-6 py-2 rounded-full border-2 border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors">
+                <span th:text="${category.categoryName}">Category</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<section id="products" class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">Our Products</h2>
+
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div th:each="product : ${products}"
+                 th:data-product-id="${product.id}"
+                 th:data-category="${product.productCategory?.categoryName}"
+                 class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow product-card">
+                <div class="aspect-w-1 aspect-h-1 bg-gray-200">
+                    <img th:src="${product.productProfile != null && !#strings.isEmpty(product.productProfile) ? product.productProfile : 'https://via.placeholder.com/300'}"
+                         th:alt="${product.productName}"
+                         class="w-full h-64 object-cover">
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-2 cursor-pointer hover:text-blue-600"
+                        th:text="${product.productName}"
+                        th:attr="onclick=|showProductDetails('${product.id}')|"></h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-mm font-bold text-blue-600">RWF<span th:text="${#numbers.formatDecimal(product.productPrice, 1, 2)}">0.00</span></span>
+                        <button th:attr="onclick=|addToCart('${product.id}', '${product.productName}', ${product.productPrice}, '${product.productProfile}')|"
+                                class="bg-blue-600 text-white px-2 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="noProducts" class="text-center py-12" th:if="${#lists.isEmpty(products)}">
+            <p class="text-gray-500 text-lg">No products available at the moment.</p>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Why Choose GuraShop?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="truck" class="w-8 h-8 text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Free Delivery</h3>
+                    <p class="text-gray-600">Free delivery on orders over RWF 5000</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Secure Payment</h3>
+                    <p class="text-gray-600">100% secure payment processing</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="headphones" class="w-8 h-8 text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">24/7 Support</h3>
+                    <p class="text-gray-600">Round-the-clock customer support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="py-16 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Get in Touch</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <i data-lucide="mail" class="w-8 h-8 text-blue-600 mx-auto mb-4"></i>
+                    <h3 class="font-semibold mb-2">Email</h3>
+                    <p class="text-gray-600">support@shopeasy.com</p>
+                </div>
+                <div class="text-center">
+                    <i data-lucide="phone" class="w-8 h-8 text-blue-600 mx-auto mb-4"></i>
+                    <h3 class="font-semibold mb-2">Phone</h3>
+                    <p class="text-gray-600">+250 792 104 882</p>
+                </div>
+                <div class="text-center">
+                    <i data-lucide="map-pin" class="w-8 h-8 text-blue-600 mx-auto mb-4"></i>
+                    <h3 class="font-semibold mb-2">Address</h3>
+                    <p class="text-gray-600">Gasabo, Kigali City, Rwanda</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4">GuraShop</h3>
+                <p class="text-gray-400">Your trusted online shopping destination with quality products and excellent service.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#about" class="hover:text-white">About Us</a></li>
+                    <li><a href="#contact" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Follow Us</h4>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/" target="_blank" class="text-gray-400 hover:text-white">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://x.com/" class="text-gray-400 hover:text-white">
+                        <i data-lucide="twitter" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://www.instagram.com/" class="text-gray-400 hover:text-white">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 GuraShop. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<div id="cartSidebar" class="fixed inset-y-0 right-0 w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-50">
+    <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h2 class="text-lg font-semibold">Shopping Cart</h2>
+            <button onclick="closeCart()" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4">
+            <div id="cartItems" class="space-y-4"></div>
+        </div>
+        <div class="border-t p-4">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-lg font-semibold">Total:</span>
+                <span id="cartTotal" class="text-lg font-bold text-blue-600">RWF 0.00</span>
+            </div>
+            <button onclick="proceedToCheckout()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="cartOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="closeCart()"></div>
+
+<div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Order Placed Successfully!</h2>
+            <p class="text-gray-600 mb-6">Thank you for your order. You will receive a confirmation email shortly.</p>
+            <div id="orderDetails" class="text-left bg-gray-50 p-4 rounded-lg mb-6"></div>
+            <button onclick="closeOrderModal()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="productDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[60] flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-900">Product Details</h2>
+            <button onclick="closeProductDetailsModal()" class="text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <div id="productDetailsContent" class="space-y-3"></div>
+        <button onclick="closeProductDetailsModal()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 mt-4">
+            Close
+        </button>
+    </div>
+</div>
+
+<div id="notification" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-[1000]">
+    <div class="flex items-center">
+        <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
+        <span id="notificationText">Product added to cart!</span>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const serverProducts = /*[[${products}]]*/ [];
+    const serverCategories = /*[[${productCategories}]]*/ [];
+    /*]]>*/
+</script>
+
+<script>
+    const products = serverProducts.map(product => ({
+        id: product.id,
+        name: product.productName,
+        price: product.productPrice,
+        category: product.productCategory ? product.productCategory.categoryName : 'uncategorized',
+        image: product.productProfile || 'https://via.placeholder.com/300',
+        description: product.productDescription || 'No description available',
+        rating: 4.0,
+        reviews: 0
+    }));
+
+    let cart = [];
+    let currentUser = null;
+    let filteredProducts = [...products];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.lucide) {
+            lucide.createIcons();
+        } else {
+            console.warn('Lucide not loaded. Icons may not display.');
+        }
+        updateCartUI();
+        checkUserSession();
+        console.log('Products:', products); // Debug product data
+    });
+
+    function filterProducts(category) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+            btn.classList.add('border-gray-300', 'text-gray-700');
+        });
+
+        const activeBtn = event.target.closest('.filter-btn');
+        activeBtn.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+        activeBtn.classList.remove('border-gray-300', 'text-gray-700');
+
+        const productCards = document.querySelectorAll('.product-card');
+        productCards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category') || 'uncategorized';
+            card.style.display = (category === 'all' || cardCategory === category) ? 'block' : 'none';
+        });
+    }
+
+    function searchProducts() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const productCards = document.querySelectorAll('.product-card');
+
+        productCards.forEach(card => {
+            const productName = card.querySelector('h3').textContent.toLowerCase();
+            card.style.display = productName.includes(searchTerm) ? 'block' : 'none';
+        });
+    }
+
+    function addToCart(productId, productName, productPrice, productProfile) {
+        const existingItem = cart.find(item => item.id === productId);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                image: productProfile || 'https://via.placeholder.com/300',
+                quantity: 1
+            });
+        }
+
+        updateCartUI();
+        showNotification('Product added to cart!');
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        updateCartUI();
+    }
+
+    function updateQuantity(productId, newQuantity) {
+        if (newQuantity <= 0) {
+            removeFromCart(productId);
+            return;
+        }
+
+        const item = cart.find(item => item.id === productId);
+        if (item) {
+            item.quantity = newQuantity;
+            updateCartUI();
+        }
+    }
+
+    function updateCartUI() {
+        const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById('cartCount').textContent = cartCount;
+
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p class="text-gray-500 text-center">Your cart is empty</p>';
+            cartTotal.textContent = 'RWF 0.00';
+            return;
+        }
+
+        let total = 0;
+        cartItems.innerHTML = cart.map(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+
+            return `
+                <div class="flex items-center space-x-4 p-3 border rounded-lg">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div class="flex-1">
+                        <h4 class="font-medium">${item.name}</h4>
+                        <p class="text-sm text-gray-600">RWF ${item.price.toFixed(2)} each</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})"
+                                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">
+                            <i data-lucide="minus" class="w-4 h-4"></i>
+                        </button>
+                        <span class="w-8 text-center">${item.quantity}</span>
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})"
+                                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="removeFromCart('${item.id}')"
+                                class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 ml-2">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        cartTotal.textContent = `RWF ${total.toFixed(2)}`;
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function openCart() {
+        document.getElementById('cartSidebar').classList.remove('translate-x-full');
+        document.getElementById('cartOverlay').classList.remove('hidden');
+    }
+
+    function closeCart() {
+        document.getElementById('cartSidebar').classList.add('translate-x-full');
+        document.getElementById('cartOverlay').classList.add('hidden');
+    }
+
+    function proceedToCheckout() {
+        if (cart.length === 0) {
+            showNotification('Your cart is empty!', 'error');
+            return;
+        }
+
+        if (!currentUser) {
+            closeCart();
+            showNotification('Please login to proceed with checkout', 'info');
+            return;
+        }
+
+        const orderNumber = Math.floor(Math.random() * 1000000);
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        document.getElementById('orderDetails').innerHTML = `
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span class="font-medium">Order Number:</span>
+                    <span>#${orderNumber}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium">Total Amount:</span>
+                    <span class="font-bold">RWF ${total.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium">Items:</span>
+                    <span>${cart.reduce((sum, item) => sum + item.quantity, 0)} items</span>
+                </div>
+            </div>
+        `;
+
+        cart = [];
+        updateCartUI();
+        closeCart();
+        document.getElementById('orderModal').classList.remove('hidden');
+    }
+
+    function closeOrderModal() {
+        document.getElementById('orderModal').classList.add('hidden');
+    }
+
+    function showProductDetails(productId) {
+        const product = products.find(p => p.id == productId);
+        if (!product) {
+            showNotification('Product not found!', 'error');
+            return;
+        }
+
+        document.getElementById('productDetailsContent').innerHTML = `
+            <img src="${product.image}" alt="${product.name}" class="w-full h-40 object-cover rounded-lg">
+            <h3 class="text-lg font-semibold">${product.name}</h3>
+            <p class="text-gray-600 text-sm">${product.description || 'No description available'}</p>
+            <p class="text-md font-bold text-blue-600">RWF ${product.price.toFixed(2)}</p>
+            <p class="text-sm text-gray-600">Rating: ${product.rating || 'N/A'} (${product.reviews || 0} reviews)</p>
+        `;
+
+        document.getElementById('productDetailsModal').classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function closeProductDetailsModal() {
+        document.getElementById('productDetailsModal').classList.add('hidden');
+    }
+
+    function toggleUserMenu() {
+        document.getElementById('userDropdown').classList.toggle('hidden');
+    }
+
+    function checkUserSession() {
+        currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+        if (currentUser) {
+            document.getElementById('userNameDisplay').textContent = currentUser.name || 'Account';
+            document.getElementById('userLoggedMenu').classList.remove('hidden');
+        }
+    }
+
+    function viewOrders() {
+        showNotification('Orders page coming soon!', 'info');
+    }
+
+    function viewProfile() {
+        showNotification('Profile page coming soon!', 'info');
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notificationText');
+
+        notification.classList.remove('bg-green-500', 'bg-red-500', 'bg-blue-500', 'text-white', 'translate-x-full');
+        notificationText.textContent = message;
+
+        notification.classList.add(
+            type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500',
+            'text-white'
+        );
+
+        setTimeout(() => notification.classList.remove('translate-x-full'), 10);
+        setTimeout(() => notification.classList.add('translate-x-full'), 3000);
+    }
+
+    document.addEventListener('click', function(event) {
+        const userMenu = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (!userMenu.contains(event.target)) {
+            userDropdown.classList.add('hidden');
+        }
+    });
+</script>
+</body>
+</html>
